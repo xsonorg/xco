@@ -1,16 +1,22 @@
-# xco
-XSON Common Object
+# XCO
 
-1. XCO简介
-	XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似Map的数据结构进行数据的存储访问，能够方便的以XML方式对数据对象进行序列化和反序列化，适合同构、异构系统之间的数据传输和交换。
-2. 支持的数据类型
+------
+
+### 1. XCO简介
+
+XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似Map的数据结构进行数据的存储访问，能够方便的以XML方式对数据对象进行序列化和反序列化，适合同构、异构系统之间的数据传输和交换。
+
+### 2. 支持的数据类型
+
 	a. 8种基本类型(byte, boolean, short, int, long, float, double, char)
 	b. 8种基本类型数组
 	e. String, String数组, String集合
 	c. Date, sql.Date, sql.Time
 	d. BigInteger, BigDecimal
 	e. XCO, XCO数组, XCO集合
-3. XML说明
+
+### 3. XML格式
+
 	<?xml version="1.0" encoding="UTF-8"?>
 	<X>
 		<B K="byteVal" V="3"/>
@@ -37,6 +43,10 @@ XSON Common Object
 		<SL K="stringList"/>
 		<SS K="stringSet"/>
 	</X>
+
+
+说明
+
 	a. 以此为例：<H K="shortVal" V="5"/>
 		H: 数据类型标识，当前标示short类型
 		K: key
@@ -59,9 +69,10 @@ XSON Common Object
 		K: bigInteger
 		M: bigDecimal
 		..
-		其他相见：org.xson.common.object.DataType
+		其他详见：org.xson.common.object.DataType
 		
-4. 常用方法
+### 4. 常用方法
+
 	a. 赋值
 		public final void setIntegerValue(String field, int var)
 			设置一个int类型的值, field为key
@@ -81,7 +92,9 @@ XSON Common Object
 			从一个XML字符串反序列化为XCO对象
 		public String toJSON()
 			把XCO对象以JSON方式进行序列化
-5. 使用示例
+
+### 5. 使用示例
+
 		XCO xco = new XCO();
 
 		// 设置基本类型
@@ -129,4 +142,4 @@ XSON Common Object
 		String stringVal = xco.getStringValue("stringVal");
 		XCO xcoVal = xco.getXCOValue("xcoVal");	
 		
-6. 设计图
+### 6. 设计图
