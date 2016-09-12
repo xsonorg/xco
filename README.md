@@ -143,3 +143,4 @@ XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似M
 		XCO xcoVal = xco.getXCOValue("xcoVal");	
 		
 ### 6. 设计图
+![XCO设计图](https://github.com/xsonorg/imagedoc/blob/master/img/xco.png)
