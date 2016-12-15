@@ -44,8 +44,7 @@ XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似M
 		<SS K="stringSet"/>
 	</X>
 
-
-说明
+> 说明
 
 	a. 以此为例：<H K="shortVal" V="5"/>
 		H: 数据类型标识，当前标示short类型
@@ -73,19 +72,24 @@ XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似M
 		
 ### 4. 常用方法
 
-	a. 赋值
+> a. 赋值
+
 		public final void setIntegerValue(String field, int var)
 			设置一个int类型的值, field为key
 		public final void setStringValue(String field, String var)
 			设置一个String类型的值, field为key
 		//setXxx
-	b. 取值
+
+> b. 取值
+
 		public final int getIntegerValue(String field)
 			获取一个int类型的值, field为key
 		public final String getStringValue(String field)
 			获取一个String类型的值, field为key
 		//getXxx
-	c. 序列化
+
+> c. 序列化
+
 		public String toXMLString()	
 			把XCO对象以XML方式进行序列化
 		public static XCO fromXML(String xml)
@@ -143,4 +147,24 @@ XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似M
 		XCO xcoVal = xco.getXCOValue("xcoVal");	
 		
 ### 6. 设计图
+
 ![XCO设计图](https://github.com/xsonorg/imagedoc/blob/master/img/xco.png)
+
+
+### 7. Maven引用
+
+	<dependency>
+		<groupId>org.xson</groupId>
+		<artifactId>common-object</artifactId>
+		<version>1.0.0</version>
+	</dependency>
+
+### 8. 新版本说明
+
+> 最新版本：1.0.1
+
+1. 支持Ognl表达式取值
+
+2. 增加getValue方法
+
+3. 增加remove方法

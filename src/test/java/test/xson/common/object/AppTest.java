@@ -120,7 +120,50 @@ public class AppTest {
 
 	@Test
 	public void test06() {
-		// XCO xco = new XCO();
+		XCO xco = new XCO();
+		xco.setStringValue("a", "av");
+		xco.setStringValue("a", null);
+
+		XCO xco1 = new XCO();
+		xco1.setStringValue("b", "bv");
+
+		XCO xco2 = new XCO();
+		xco2.setStringValue("c", "cv");
+
+		
+		XCO[] array = new XCO[2];
+		array[0] = new XCO();
+		array[1] = new XCO();
+
+		array[0].setIntegerValue("i", 1);
+		array[1].setStringValue("x", "acc");
+
+		Set<XCO> set = new HashSet<XCO>();
+		set.add(array[0]);
+		set.add(array[1]);
+		
+		
+		List<XCO> list = new ArrayList<XCO>();
+		list.add(array[0]);
+		list.add(array[1]);
+		
+		xco.setXCOValue("xco1", xco1);
+		xco.setXCOSetValue("set", set);
+		
+		xco1.setXCOValue("xco2", xco2);
+		
+		xco1.setXCOArrayValue("array", array);
+		xco2.setXCOListValue("list", list);
+		
+		System.out.println(xco);
+		System.out.println(xco.get("xco1.xco2.c"));
+		
+		System.out.println(xco.get("set"));
+		System.out.println(xco.get("set[0]"));
+		System.out.println(xco.get("set[1]"));
+		
+		
+		System.out.println(xco.get("xco1.array[1].x"));
 	}
 
 }

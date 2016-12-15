@@ -60,6 +60,9 @@ public class XCO implements Serializable, Cloneable {
 	 * 可能存在并发问题
 	 */
 	protected final void putItem(String key, IField fieldValue) {
+		if (null == key) {
+			throw new XCOException("Fields are not allowed to be empty");
+		}
 		IField oldValue = this.dateMap.put(key, fieldValue);
 		if (oldValue == null) {
 			this.fieldList.add(key);
@@ -73,6 +76,7 @@ public class XCO implements Serializable, Cloneable {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setObjectValue(String field, Object value) {
 		if (null == value) {
+			remove(field);// 删除
 			return;
 		}
 
@@ -163,11 +167,33 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public Object getObjectValue(String field) {
-		IField fieldValue = this.dateMap.get(field);
+		// IField fieldValue = this.dateMap.get(field);
+		IField fieldValue = getField(field);
 		if (null != fieldValue) {
 			return fieldValue.getValue();
 		}
 		return null;
+	}
+
+	public Object get(String field) {
+		return getObjectValue(field);
+	}
+
+	public void remove(String field) {
+		if (exists(field)) {
+			// int i = 0;
+			// for (String fieldItem : fieldList) {
+			// if (field.equals(fieldItem)) {
+			// this.fieldList.remove(i);
+			// this.fieldValueList.remove(i);
+			// }
+			// i++;
+			// }
+			int i = this.fieldList.indexOf(field);
+			this.fieldList.remove(i);
+			this.fieldValueList.remove(i);
+			this.dateMap.remove(field);
+		}
 	}
 
 	protected void setField(String field, IField fieldValue) {
@@ -175,6 +201,13 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	protected IField getField(String field) {
+		return XCOOgnl.getField(this, field);
+	}
+
+	/**
+	 * OgnlXCO专用
+	 */
+	protected IField getField0(String field) {
 		return this.dateMap.get(field);
 	}
 
@@ -212,7 +245,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setByteArrayValue(String field, byte[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new ByteArrayField(field, var));
@@ -224,7 +257,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setShortArrayValue(String field, short[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new ShortArrayField(field, var));
@@ -236,7 +269,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setLongArrayValue(String field, long[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new LongArrayField(field, var));
@@ -248,7 +281,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setFloatArrayValue(String field, float[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new FloatArrayField(field, var));
@@ -260,7 +293,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setDoubleArrayValue(String field, double[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new DoubleArrayField(field, var));
@@ -272,7 +305,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setCharArrayValue(String field, char[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new CharArrayField(field, var));
@@ -284,7 +317,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setBooleanArrayValue(String field, boolean[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new BooleanArrayField(field, var));
@@ -292,7 +325,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setDateTimeValue(String field, java.util.Date var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new DateField(field, var));
@@ -300,7 +333,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setDateValue(String field, java.sql.Date var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new SqlDateField(field, var));
@@ -308,7 +341,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setTimeValue(String field, java.sql.Time var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new SqlTimeField(field, var));
@@ -316,7 +349,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setTimestampValue(String field, java.sql.Timestamp var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new TimestampField(field, var));
@@ -324,7 +357,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setBigIntegerValue(String field, BigInteger var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new BigIntegerField(field, var));
@@ -332,7 +365,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setBigDecimalValue(String field, BigDecimal var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new BigDecimalField(field, var));
@@ -344,7 +377,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setIntegerArrayValue(String field, int[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new IntegerArrayField(field, var));
@@ -352,7 +385,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setStringValue(String field, String var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new StringField(field, var));
@@ -360,7 +393,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setStringArrayValue(String field, String[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new StringArrayField(field, var));
@@ -368,7 +401,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setStringListValue(String field, List<String> var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new StringListField(field, var));
@@ -376,7 +409,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setStringSetValue(String field, Set<String> var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new StringSetField(field, var));
@@ -384,7 +417,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setXCOValue(String field, XCO var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new XCOField(field, var));
@@ -392,7 +425,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setXCOArrayValue(String field, XCO[] var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new XCOArrayField(field, var));
@@ -400,7 +433,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setXCOListValue(String field, List<XCO> var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new XCOListField(field, var));
@@ -408,7 +441,7 @@ public class XCO implements Serializable, Cloneable {
 
 	public final void setXCOSetValue(String field, Set<XCO> var) {
 		if (null == var) {
-			// throw new XCOException("Data set can not be empty");
+			remove(field);
 			return;
 		}
 		setField(field, new XCOSetField(field, var));
@@ -425,10 +458,18 @@ public class XCO implements Serializable, Cloneable {
 		return ((Byte) value).byteValue();
 	}
 
+	public final Byte getByte(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.BYTE_TYPE);
+		return (Byte) value;
+	}
+
 	public final byte[] getByteArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.BYTE_ARRAY_TYPE);
@@ -444,10 +485,18 @@ public class XCO implements Serializable, Cloneable {
 		return ((Short) value).shortValue();
 	}
 
+	public final Short getShort(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.SHORT_TYPE);
+		return (Short) value;
+	}
+
 	public final short[] getShortArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.SHORT_ARRAY_TYPE);
@@ -463,10 +512,18 @@ public class XCO implements Serializable, Cloneable {
 		return ((Long) value).longValue();
 	}
 
+	public final Long getLong(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.LONG_TYPE);
+		return (Long) value;
+	}
+
 	public final long[] getLongArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.LONG_ARRAY_TYPE);
@@ -482,10 +539,18 @@ public class XCO implements Serializable, Cloneable {
 		return ((Float) value).floatValue();
 	}
 
+	public final Float getFloat(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.FLOAT_TYPE);
+		return (Float) value;
+	}
+
 	public final float[] getFloatArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.FLOAT_ARRAY_TYPE);
@@ -501,10 +566,18 @@ public class XCO implements Serializable, Cloneable {
 		return ((Double) value).doubleValue();
 	}
 
+	public final Double getDouble(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.DOUBLE_TYPE);
+		return (Double) value;
+	}
+
 	public final double[] getDoubleArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.DOUBLE_ARRAY_TYPE);
@@ -520,10 +593,18 @@ public class XCO implements Serializable, Cloneable {
 		return ((Character) value).charValue();
 	}
 
+	public final Character getChar(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.CHAR_TYPE);
+		return (Character) value;
+	}
+
 	public final char[] getCharArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.CHAR_ARRAY_TYPE);
@@ -539,10 +620,18 @@ public class XCO implements Serializable, Cloneable {
 		return ((Boolean) value).booleanValue();
 	}
 
+	public final Boolean getBoolean(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.BOOLEAN_TYPE);
+		return (Boolean) value;
+	}
+
 	public final boolean[] getBooleanArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.BOOLEAN_ARRAY_TYPE);
@@ -552,7 +641,6 @@ public class XCO implements Serializable, Cloneable {
 	public final java.util.Date getDateTimeValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.DATE_TYPE);
@@ -562,7 +650,6 @@ public class XCO implements Serializable, Cloneable {
 	public final java.sql.Date getDateValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.SQLDATE_TYPE);
@@ -572,7 +659,6 @@ public class XCO implements Serializable, Cloneable {
 	public final java.sql.Time getTimeValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.SQLTIME_TYPE);
@@ -582,7 +668,6 @@ public class XCO implements Serializable, Cloneable {
 	public final java.sql.Timestamp getTimestampValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.TIMESTAMP_TYPE);
@@ -592,7 +677,6 @@ public class XCO implements Serializable, Cloneable {
 	public final BigInteger getBigIntegerValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.BIGINTEGER_TYPE);
@@ -602,7 +686,6 @@ public class XCO implements Serializable, Cloneable {
 	public final BigDecimal getBigDecimalValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.BIGDICIMAL_TYPE);
@@ -621,7 +704,6 @@ public class XCO implements Serializable, Cloneable {
 	public final int[] getIntegerArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.INT_ARRAY_TYPE);
@@ -631,7 +713,6 @@ public class XCO implements Serializable, Cloneable {
 	public final String getStringValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.STRING_TYPE);
@@ -641,7 +722,6 @@ public class XCO implements Serializable, Cloneable {
 	public final String[] getStringArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.STRING_ARRAY_TYPE);
@@ -652,7 +732,6 @@ public class XCO implements Serializable, Cloneable {
 	public final List<String> getStringListValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.STRING_LIST_TYPE);
@@ -663,7 +742,6 @@ public class XCO implements Serializable, Cloneable {
 	public final Set<String> getStringSetValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.STRING_SET_TYPE);
@@ -673,7 +751,6 @@ public class XCO implements Serializable, Cloneable {
 	public final XCO getXCOValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.XCO_TYPE);
@@ -683,7 +760,6 @@ public class XCO implements Serializable, Cloneable {
 	public final XCO[] getXCOArrayValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.XCO_ARRAY_TYPE);
@@ -694,7 +770,6 @@ public class XCO implements Serializable, Cloneable {
 	public final List<XCO> getXCOListValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.XCO_LIST_TYPE);
@@ -705,7 +780,6 @@ public class XCO implements Serializable, Cloneable {
 	public final Set<XCO> getXCOSetValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			// throw new XCOException("The field does not exist: " + field);
 			return null;
 		}
 		Object value = fieldValue.getValue(DataType.XCO_SET_TYPE);
