@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.xson.core.XSON;
+
 import nanoxml.XMLElement;
 
 /**
@@ -1053,6 +1055,22 @@ public class XCO implements Serializable, Cloneable {
 		XCO xco = new XCO();
 		xco.fromXML0(xmlNode);
 		return xco;
+	}
+
+	public byte[] toBytes() {
+		return toBytes(0);
+	}
+
+	public byte[] toBytes(int offsetLength) {
+		return XSON.encode(this, offsetLength);
+	}
+
+	public static XCO fromBytes(byte[] buffer) {
+		return fromBytes(buffer, 0);
+	}
+
+	public static XCO fromBytes(byte[] buffer, int offsetLength) {
+		return XSON.decode(buffer, offsetLength);
 	}
 
 }
