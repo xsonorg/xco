@@ -102,14 +102,14 @@ public class XCO implements Serializable, Cloneable {
 			putItem(field, new StringField(field, (String) value));
 		} else if (value instanceof XCO) {
 			putItem(field, new XCOField(field, (XCO) value));
-		} else if (value instanceof java.util.Date) {
-			putItem(field, new DateField(field, (java.util.Date) value));
 		} else if (value instanceof java.sql.Date) {
 			putItem(field, new SqlDateField(field, (java.sql.Date) value));
 		} else if (value instanceof java.sql.Time) {
 			putItem(field, new SqlTimeField(field, (java.sql.Time) value));
 		} else if (value instanceof java.sql.Timestamp) {
 			putItem(field, new TimestampField(field, (java.sql.Timestamp) value));
+		} else if (value instanceof java.util.Date) {// fix bug
+			putItem(field, new DateField(field, (java.util.Date) value));
 		} else if (value instanceof BigInteger) {
 			putItem(field, new BigIntegerField(field, (BigInteger) value));
 		} else if (value instanceof BigDecimal) {
