@@ -104,7 +104,7 @@ XCO对象的`toBytes`和`fromBytes`方法需要`XSON`框架支持，具体的使
 	<dependency>
 	    <groupId>org.xson</groupId>
 	    <artifactId>xson</artifactId>
-	    <version>1.2.0</version>
+	    <version>1.0.2</version>
 	</dependency>
 
 > b. 编辑xson.properties配置文件
@@ -112,7 +112,7 @@ XCO对象的`toBytes`和`fromBytes`方法需要`XSON`框架支持，具体的使
 	# Support for XCO
 	xco=true
 
-**提示** 关于`XSON`具体可参考<http://xson.org/project/xson/1.2.0/>
+**提示** 关于`XSON`具体可参考<http://xson.org/project/xson/1.0.2/>
 
 ### 7. 使用示例
 
@@ -232,4 +232,8 @@ XCO对象的`toBytes`和`fromBytes`方法需要`XSON`框架支持，具体的使
 
 > 类说明：
 
-xxxx
+暂略.
+
+### 10. 源码
+
+<https://github.com/xsonorg/xco>

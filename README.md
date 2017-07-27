@@ -9,7 +9,7 @@ XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似M
 
 ### 2. XCO生态圈
 
-![XCO生态圈](images/xco-ecology.png)
+![XCO生态圈](http://www.xson.org/project/xco/1.0.2/images/xco-ecology.png)
 
 1. xco-java：XCO Java版本；
 2. xco-js：XCO JavaScript版本，具体请参考<http://xson.org/project/xco-js/>
@@ -104,7 +104,7 @@ XCO对象的`toBytes`和`fromBytes`方法需要`XSON`框架支持，具体的使
 	<dependency>
 	    <groupId>org.xson</groupId>
 	    <artifactId>xson</artifactId>
-	    <version>1.2.0</version>
+	    <version>1.0.2</version>
 	</dependency>
 
 > b. 编辑xson.properties配置文件
@@ -112,7 +112,7 @@ XCO对象的`toBytes`和`fromBytes`方法需要`XSON`框架支持，具体的使
 	# Support for XCO
 	xco=true
 
-**提示** 关于`XSON`具体可参考<http://xson.org/project/xson/1.2.0/>
+**提示** 关于`XSON`具体可参考<http://xson.org/project/xson/1.0.2/>
 
 ### 7. 使用示例
 
@@ -228,4 +228,14 @@ XCO对象的`toBytes`和`fromBytes`方法需要`XSON`框架支持，具体的使
 		
 ### 9. 类图
 
-![XCO设计图](images/xco.png)
+![XCO设计图](http://www.xson.org/project/xco/1.0.2/images/xco.png)
+
+### 10. 官方网站
+
+<http://xson.org/>
+
+### 11. 沟通交流
+
+QQ群：518522232**（请备注关注的项目）**
+
+邮箱：xson_org@126.com
