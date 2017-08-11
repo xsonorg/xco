@@ -7,6 +7,7 @@ public class XCODeserializer implements XsonReader {
 
 	@Override
 	public Object read(ReaderModel model) {
+		model.incrementIndex(1);// fix bug
 		XCO returnValue = new XCO();
 		model.appendObject(returnValue);
 		readXCO(model, returnValue);

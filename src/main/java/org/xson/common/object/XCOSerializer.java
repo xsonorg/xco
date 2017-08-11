@@ -9,7 +9,9 @@ public class XCOSerializer extends DefaultSerializer {
 
 	@Override
 	public void write(Object target, WriterModel model) {
-		model.appendCreateUserObject(target.getClass());
+		// model.appendCreateUserObject(target.getClass());
+		// fix bug
+		model.appendCreateObject(target.getClass());
 		XCO xco = (XCO) target;
 		for (String key : xco.keysList()) {
 			model.writeObject(key);
