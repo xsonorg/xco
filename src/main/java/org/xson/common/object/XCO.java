@@ -50,6 +50,15 @@ public class XCO implements Serializable, Cloneable {
 		return (String) value;
 	}
 
+	@SuppressWarnings("unchecked")
+	public <T> T getData() {
+		IField fieldValue = getField("$$DATA");
+		if (null == fieldValue) {
+			return null;
+		}
+		return (T) fieldValue.getValue();
+	}
+
 	public Object getAttachObject() {
 		return attachObject;
 	}
