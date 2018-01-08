@@ -130,7 +130,6 @@ public class AppTest {
 		XCO xco2 = new XCO();
 		xco2.setStringValue("c", "cv");
 
-		
 		XCO[] array = new XCO[2];
 		array[0] = new XCO();
 		array[1] = new XCO();
@@ -141,29 +140,48 @@ public class AppTest {
 		Set<XCO> set = new HashSet<XCO>();
 		set.add(array[0]);
 		set.add(array[1]);
-		
-		
+
 		List<XCO> list = new ArrayList<XCO>();
 		list.add(array[0]);
 		list.add(array[1]);
-		
+
 		xco.setXCOValue("xco1", xco1);
 		xco.setXCOSetValue("set", set);
-		
+
 		xco1.setXCOValue("xco2", xco2);
-		
+
 		xco1.setXCOArrayValue("array", array);
 		xco2.setXCOListValue("list", list);
-		
+
 		System.out.println(xco);
 		System.out.println(xco.get("xco1.xco2.c"));
-		
+
 		System.out.println(xco.get("set"));
 		System.out.println(xco.get("set[0]"));
 		System.out.println(xco.get("set[1]"));
-		
-		
+
 		System.out.println(xco.get("xco1.array[1].x"));
 	}
 
+	@Test
+	public void test07() {
+		XCO xco = new XCO();
+		xco.setStringValue("a", "中国");
+		xco.setStringValue("b", "日本");
+		
+		System.out.println(xco);
+		
+		XCO xco1 = new XCO();
+		xco1.setStringValue("a", "英国");
+		xco1.setStringValue("d", "美国");
+		xco1.setStringValue("e", "韩国");
+		
+		System.out.println(xco1);
+		
+//		xco.append(xco1);
+//		System.out.println(xco);
+		
+		xco1.append(xco);
+		System.out.println(xco1);
+	}
 }

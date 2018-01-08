@@ -1082,4 +1082,11 @@ public class XCO implements Serializable, Cloneable {
 		return XSON.decode(buffer, offsetLength);
 	}
 
+	public void append(XCO xco) {
+		int size = xco.fieldList.size();
+		for (int i = 0; i < size; i++) {
+			this.putItem(xco.fieldList.get(i), xco.fieldValueList.get(i));
+		}
+	}
+
 }

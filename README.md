@@ -34,17 +34,23 @@ XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似M
 
 ### 4. 版本maven使用
 
-当前最新版本：1.0.2
+当前最新版本：1.0.3
 
 > maven中使用
 
 	<dependency>
 		<groupId>org.xson</groupId>
 		<artifactId>common-object</artifactId>
-		<version>1.0.2</version>
+		<version>1.0.3</version>
 	</dependency>
 
 ### 5. 更新说明
+
+> 1.0.3版本
+
+1. 增加append方法
+
+> 1.0.2版本
 
 1. 支持Ognl表达式取值
 2. 增加getValue相关方法
