@@ -78,7 +78,8 @@ public class XCOOgnl {
 
 	protected static IField getField(XCO xco, String field) {
 		if (isSimpleField(field)) {
-			return xco.getField0(field);
+			// return xco.getField0(field); // 之前已经检测
+			return null;
 		} else {
 			List<Object> fieldItemList = parseField(field);
 			int size = fieldItemList.size();

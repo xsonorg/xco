@@ -4,7 +4,7 @@
 
 	<groupId>org.xson</groupId>
 	<artifactId>common-object</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4</version>
 	<packaging>jar</packaging>
 
 	<name>common-object</name>

@@ -168,20 +168,49 @@ public class AppTest {
 		XCO xco = new XCO();
 		xco.setStringValue("a", "中国");
 		xco.setStringValue("b", "日本");
-		
+
 		System.out.println(xco);
-		
+
 		XCO xco1 = new XCO();
 		xco1.setStringValue("a", "英国");
 		xco1.setStringValue("d", "美国");
 		xco1.setStringValue("e", "韩国");
-		
+
 		System.out.println(xco1);
-		
-//		xco.append(xco1);
-//		System.out.println(xco);
-		
+
+		// xco.append(xco1);
+		// System.out.println(xco);
+
 		xco1.append(xco);
 		System.out.println(xco1);
+	}
+
+	@Test
+	public void test08() {
+		XCO xco = new XCO();
+		xco.setStringValue("www.baidu.com", "中国");
+
+		XCO xco1 = new XCO();
+		xco1.setStringValue("name", "日本");
+
+		xco.setXCOValue("x", xco1);
+
+		System.out.println(xco);
+		System.out.println(xco.get("www.baidu.com"));
+		System.out.println(xco.get("x.name"));
+		
+		System.out.println(xco.get("wwww"));
+	}
+
+	@Test
+	public void testAll() {
+		test01();
+		test02();
+		test03();
+		test04();
+		test05();
+		test06();
+		test07();
+		test08();
 	}
 }

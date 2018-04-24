@@ -212,6 +212,10 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	protected IField getField(String field) {
+		IField iField = getField0(field);
+		if (null != iField) {
+			return iField;
+		}
 		return XCOOgnl.getField(this, field);
 	}
 
