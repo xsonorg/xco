@@ -4,9 +4,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Vector;
 
@@ -17,7 +21,7 @@ import nanoxml.XMLElement;
 /**
  * XSON Common Object
  */
-public class XCO implements Serializable, Cloneable {
+public class XCO implements Map, Serializable, Cloneable {
 
 	private static final long		serialVersionUID	= 1L;
 
@@ -1093,4 +1097,113 @@ public class XCO implements Serializable, Cloneable {
 		}
 	}
 
+	/*************** map implements ***************/
+
+	@Override
+	public boolean containsKey(Object key) {
+		return exists(key.toString());
+	}
+
+	@Override
+	public boolean containsValue(Object value) {
+		return false;
+	}
+
+	@Override
+	public Object get(Object key) {
+		return get(key.toString());
+	}
+
+	@Override
+	public Object put(Object key, Object value) {
+		setObjectValue(key.toString(), value);
+		return value;
+	}
+
+	@Override
+	public Object remove(Object key) {
+		remove(key.toString());
+		return null;
+	}
+
+	@Override
+	public void putAll(Map m) {
+	}
+
+	@Override
+	public void clear() {
+	}
+
+	@Override
+	public Set<String> keySet() {
+		return keys();
+	}
+
+	@Override
+	public Collection<Object> values() {
+		List<Object> valueList = new ArrayList<Object>();
+		for (IField field : fieldValueList) {
+			valueList.add(field.getValue());
+		}
+		return valueList;
+	}
+
+	@Override
+	public Set<Map.Entry<String, Object>> entrySet() {
+		Set<Map.Entry<String, Object>> set = new LinkedHashSet<Map.Entry<String, Object>>();
+		for (int i = 0; i < this.fieldList.size(); i++) {
+			set.add(new Node(this.fieldList.get(i), this.fieldValueList.get(i).getValue()));
+		}
+		return set;
+	}
+
+	static class Node<K, V> implements Entry<K, V> {
+		K	key;
+		V	value;
+
+		Node(K key, V value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		public final K getKey() {
+			return key;
+		}
+
+		public final V getValue() {
+			return value;
+		}
+
+		public final String toString() {
+			return key + "=" + value;
+		}
+
+		public final int hashCode() {
+			return Objects.hashCode(key) ^ Objects.hashCode(value);
+		}
+
+		public final V setValue(V newValue) {
+			V oldValue = value;
+			value = newValue;
+			return oldValue;
+		}
+
+		public final boolean equals(Object o) {
+			if (o == this)
+				return true;
+			if (o instanceof Map.Entry) {
+				Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
+				if (Objects.equals(key, e.getKey()) && Objects.equals(value, e.getValue()))
+					return true;
+			}
+			return false;
+		}
+	}
+
+	public static void main(String[] args) {
+		XCO xco = new XCO();
+		xco.setStringValue("k1", "中国");
+		xco.setStringValue("k2", "日本");
+		System.out.println(xco.entrySet());
+	}
 }
