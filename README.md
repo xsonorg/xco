@@ -65,6 +65,7 @@ XCO(XSON common object)是一种通用的数据对象, 底层采用一种类似M
 3. 增加remove方法
 4. 增加byte[]相关的序列化和反序列化操作
 5. 增加getData方法
+6. 实现Map接口
 
 ### 6. 常用方法
 
