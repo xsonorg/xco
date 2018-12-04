@@ -198,8 +198,20 @@ public class AppTest {
 		System.out.println(xco);
 		System.out.println(xco.get("www.baidu.com"));
 		System.out.println(xco.get("x.name"));
-		
+
 		System.out.println(xco.get("wwww"));
+	}
+
+	@Test
+	public void test09() {
+		XCO xco = new XCO();
+		xco.setStringValue("name", "日本");
+		xco.setStringValue("name1", "日本");
+		xco.setStringValue("name2", "日本");
+		xco.setStringValue("name3", "日本");
+		String[] filters = { "name*" };
+		String xml = xco.toXMLString(filters);
+		System.out.println(xml);
 	}
 
 	@Test
@@ -212,5 +224,6 @@ public class AppTest {
 		test06();
 		test07();
 		test08();
+		test09();
 	}
 }

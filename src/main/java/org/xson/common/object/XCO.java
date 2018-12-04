@@ -1024,6 +1024,21 @@ public class XCO implements Serializable, Cloneable {
 		builder.append("</X>");
 	}
 
+	private void toXMLString(String key, StringBuilder builder, String[] filters) {
+		if (null == key) {
+			builder.append("<X>");
+		} else {
+			builder.append("<X " + DataType.PROPERTY_K + "=\"" + key + "\">");
+		}
+		for (int i = 0, size = fieldValueList.size(); i < size; i++) {
+			String fieldName = fieldList.get(i);
+			if (!XCOUtil.simpleMatch(filters, fieldName)) {
+				fieldValueList.get(i).toXMLString(builder);
+			}
+		}
+		builder.append("</X>");
+	}
+
 	public String toJSON() {
 		StringBuilder builder = new StringBuilder(1024);
 		builder.append("{");
@@ -1041,6 +1056,17 @@ public class XCO implements Serializable, Cloneable {
 		StringBuilder builder = new StringBuilder(1024);
 		builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 		toXMLString(null, builder);
+		return builder.toString();
+	}
+
+	public String toXMLString(String[] ignoredField) {
+		StringBuilder builder = new StringBuilder(1024);
+		builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+		if (null == ignoredField || 0 == ignoredField.length) {
+			toXMLString(null, builder);
+		} else {
+			toXMLString(null, builder, ignoredField);
+		}
 		return builder.toString();
 	}
 
