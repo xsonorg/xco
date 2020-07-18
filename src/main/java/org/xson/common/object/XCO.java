@@ -19,17 +19,42 @@ import nanoxml.XMLElement;
  */
 public class XCO implements Serializable, Cloneable {
 
-	private static final long		serialVersionUID	= 1L;
+	private static final long       serialVersionUID = 1L;
 
-	private HashMap<String, IField>	dateMap;
-	private ArrayList<String>		fieldList;
-	private ArrayList<IField>		fieldValueList;
-	private Object					attachObject;
+	private HashMap<String, IField> dateMap          = null;
+	private ArrayList<String>       fieldList        = null;
+	private ArrayList<IField>       fieldValueList   = null;
+	private Object                  attachObject     = null;
+
+	private boolean                 readOnly         = false;
+	private boolean                 compatible       = false;
 
 	public XCO() {
 		this.dateMap = new HashMap<String, IField>();
 		this.fieldList = new ArrayList<String>();
 		this.fieldValueList = new ArrayList<IField>();
+	}
+
+	public XCO(boolean readOnly, boolean compatible) {
+		this();
+		this.readOnly = readOnly;
+		this.compatible = compatible;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+
+	public void setCompatible(boolean compatible) {
+		this.compatible = compatible;
+	}
+
+	public boolean isReadOnly() {
+		return readOnly;
+	}
+
+	public boolean isCompatible() {
+		return compatible;
 	}
 
 	public Integer getCode() {
@@ -807,7 +832,7 @@ public class XCO implements Serializable, Cloneable {
 	private void fromXML0(XMLElement xmlNode) {
 		for (Object obj : xmlNode.getChildren()) {
 			XMLElement node = (XMLElement) obj;
-			String tag = node.getName();
+			String     tag  = node.getName();
 
 			if ("B".equals(tag)) { // byte
 				String k = node.getStringAttribute(DataType.PROPERTY_K);
@@ -846,8 +871,8 @@ public class XCO implements Serializable, Cloneable {
 				String v = node.getStringAttribute(DataType.PROPERTY_V);
 				putItem(k, new StringField(k, v));
 			} else if ("X".equals(tag)) { // xco
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				XCO xco = new XCO();
+				String k   = node.getStringAttribute(DataType.PROPERTY_K);
+				XCO    xco = new XCO();
 				xco.fromXML0(node);
 				putItem(k, new XCOField(k, xco));
 			} else if ("A".equals(tag)) { // date
@@ -875,9 +900,9 @@ public class XCO implements Serializable, Cloneable {
 				String v = node.getStringAttribute(DataType.PROPERTY_V);
 				putItem(k, new BigDecimalField(k, new BigDecimal(v)));
 			} else if ("SL".equals(tag)) { // string list
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
+				String             k         = node.getStringAttribute(DataType.PROPERTY_K);
 				Vector<XMLElement> childList = node.getChildren();
-				List<String> list = new ArrayList<String>();
+				List<String>       list      = new ArrayList<String>();
 				for (XMLElement child : childList) {
 					String childTag = child.getName();
 					if (!childTag.equals("S")) {
@@ -888,9 +913,9 @@ public class XCO implements Serializable, Cloneable {
 				StringListField fieldValue = new StringListField(k, list);
 				putItem(k, fieldValue);
 			} else if ("SS".equals(tag)) { // string set
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
+				String             k         = node.getStringAttribute(DataType.PROPERTY_K);
 				Vector<XMLElement> childList = node.getChildren();
-				Set<String> set = new HashSet<String>();
+				Set<String>        set       = new HashSet<String>();
 				for (XMLElement child : childList) {
 					String childTag = child.getName();
 					if (!childTag.equals("S")) {
@@ -901,9 +926,9 @@ public class XCO implements Serializable, Cloneable {
 				StringSetField fieldValue = new StringSetField(k, set);
 				putItem(k, fieldValue);
 			} else if ("XL".equals(tag)) { // xco list
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
+				String             k         = node.getStringAttribute(DataType.PROPERTY_K);
 				Vector<XMLElement> childList = node.getChildren();
-				List<XCO> xcos = new ArrayList<XCO>();
+				List<XCO>          xcos      = new ArrayList<XCO>();
 				for (XMLElement child : childList) {
 					String childTag = child.getName();
 					if (!childTag.equals("X")) {
@@ -916,9 +941,9 @@ public class XCO implements Serializable, Cloneable {
 				XCOListField fieldValue = new XCOListField(k, xcos);
 				putItem(k, fieldValue);
 			} else if ("XS".equals(tag)) { // xco set
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
+				String             k         = node.getStringAttribute(DataType.PROPERTY_K);
 				Vector<XMLElement> childList = node.getChildren();
-				Set<XCO> xcos = new HashSet<XCO>();
+				Set<XCO>           xcos      = new HashSet<XCO>();
 				for (XMLElement child : childList) {
 					String childTag = child.getName();
 					if (!childTag.equals("X")) {
@@ -931,58 +956,58 @@ public class XCO implements Serializable, Cloneable {
 				XCOSetField fieldValue = new XCOSetField(k, xcos);
 				putItem(k, fieldValue);
 			} else if ("BA".equals(tag)) { // byte[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				String v = node.getStringAttribute(DataType.PROPERTY_V);
+				String         k          = node.getStringAttribute(DataType.PROPERTY_K);
+				String         v          = node.getStringAttribute(DataType.PROPERTY_V);
 				ByteArrayField fieldValue = new ByteArrayField(k, null);
 				fieldValue.setValue(v);
 				putItem(k, fieldValue);
 			} else if ("HA".equals(tag)) { // short[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				String v = node.getStringAttribute(DataType.PROPERTY_V);
+				String          k          = node.getStringAttribute(DataType.PROPERTY_K);
+				String          v          = node.getStringAttribute(DataType.PROPERTY_V);
 				ShortArrayField fieldValue = new ShortArrayField(k, null);
 				fieldValue.setValue(v);
 				putItem(k, fieldValue);
 			} else if ("IA".equals(tag)) { // int[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				String v = node.getStringAttribute(DataType.PROPERTY_V);
+				String            k          = node.getStringAttribute(DataType.PROPERTY_K);
+				String            v          = node.getStringAttribute(DataType.PROPERTY_V);
 				IntegerArrayField fieldValue = new IntegerArrayField(k, null);
 				fieldValue.setValue(v);
 				putItem(k, fieldValue);
 			} else if ("LA".equals(tag)) { // long[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				String v = node.getStringAttribute(DataType.PROPERTY_V);
+				String         k          = node.getStringAttribute(DataType.PROPERTY_K);
+				String         v          = node.getStringAttribute(DataType.PROPERTY_V);
 				LongArrayField fieldValue = new LongArrayField(k, null);
 				fieldValue.setValue(v);
 				putItem(k, fieldValue);
 			} else if ("FA".equals(tag)) { // float[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				String v = node.getStringAttribute(DataType.PROPERTY_V);
+				String          k          = node.getStringAttribute(DataType.PROPERTY_K);
+				String          v          = node.getStringAttribute(DataType.PROPERTY_V);
 				FloatArrayField fieldValue = new FloatArrayField(k, null);
 				fieldValue.setValue(v);
 				putItem(k, fieldValue);
 			} else if ("DA".equals(tag)) { // double[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				String v = node.getStringAttribute(DataType.PROPERTY_V);
+				String           k          = node.getStringAttribute(DataType.PROPERTY_K);
+				String           v          = node.getStringAttribute(DataType.PROPERTY_V);
 				DoubleArrayField fieldValue = new DoubleArrayField(k, null);
 				fieldValue.setValue(v);
 				putItem(k, fieldValue);
 			} else if ("CA".equals(tag)) { // char[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				String v = node.getStringAttribute(DataType.PROPERTY_V);
+				String         k          = node.getStringAttribute(DataType.PROPERTY_K);
+				String         v          = node.getStringAttribute(DataType.PROPERTY_V);
 				CharArrayField fieldValue = new CharArrayField(k, null);
 				fieldValue.setValue(v);
 				putItem(k, fieldValue);
 			} else if ("OA".equals(tag)) { // boolean[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
-				String v = node.getStringAttribute(DataType.PROPERTY_V);
+				String            k          = node.getStringAttribute(DataType.PROPERTY_K);
+				String            v          = node.getStringAttribute(DataType.PROPERTY_V);
 				BooleanArrayField fieldValue = new BooleanArrayField(k, null);
 				fieldValue.setValue(v);
 				putItem(k, fieldValue);
 			} else if ("SA".equals(tag)) { // string[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
+				String             k         = node.getStringAttribute(DataType.PROPERTY_K);
 				Vector<XMLElement> childList = node.getChildren();
-				String[] array = new String[childList.size()];
-				int i = 0;
+				String[]           array     = new String[childList.size()];
+				int                i         = 0;
 				for (XMLElement child : childList) {
 					String childTag = child.getName();
 					if (!childTag.equals("S")) {
@@ -993,12 +1018,12 @@ public class XCO implements Serializable, Cloneable {
 				StringArrayField fieldValue = new StringArrayField(k, array);
 				putItem(k, fieldValue);
 			} else if ("XA".equals(tag)) { // xco[]
-				String k = node.getStringAttribute(DataType.PROPERTY_K);
+				String             k         = node.getStringAttribute(DataType.PROPERTY_K);
 				Vector<XMLElement> childList = node.getChildren();
-				XCO[] xcos = new XCO[childList.size()];
+				XCO[]              xcos      = new XCO[childList.size()];
 				for (int i = 0; i < xcos.length; i++) {
-					XMLElement child = childList.get(i);
-					String childTag = child.getName();
+					XMLElement child    = childList.get(i);
+					String     childTag = child.getName();
 					if (!childTag.equals("X")) {
 						throw new XCOException("Parse xml error: unexpected Tag name " + childTag + " under " + tag);
 					}

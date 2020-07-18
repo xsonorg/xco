@@ -4,11 +4,12 @@ public interface IField extends DataType {
 
 	Object getValue();
 
-	Object getValue(int dataType);
+	//	Object getValue(int dataType);
+	Object getValue(int dataType, boolean compatible);
 
 	IField cloneSelf();
 
 	void toXMLString(StringBuilder builder);
 
-	void toJSONString(StringBuilder builder);
+	void toJSONString(StringBuilder builder, boolean encode);
 }

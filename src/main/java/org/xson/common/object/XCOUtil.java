@@ -6,20 +6,91 @@ import java.text.SimpleDateFormat;
 
 public class XCOUtil {
 
-	public static String encodeTextForJSON(String text) {
+	private final static char[] replaceChars = new char[93];
+
+	static {
+		replaceChars['\0'] = '0';
+		replaceChars['\1'] = '1';
+		replaceChars['\2'] = '2';
+		replaceChars['\3'] = '3';
+		replaceChars['\4'] = '4';
+		replaceChars['\5'] = '5';
+		replaceChars['\6'] = '6';
+		replaceChars['\7'] = '7';
+		replaceChars['\b'] = 'b'; 		// 8
+		replaceChars['\t'] = 't'; 		// 9
+		replaceChars['\n'] = 'n'; 		// 10
+		replaceChars['\u000B'] = 'v'; 	// 11
+		replaceChars['\f'] = 'f'; 		// 12
+		replaceChars['\r'] = 'r'; 		// 13
+		replaceChars['\"'] = '"'; 		// 34
+		replaceChars['\''] = '\''; 		// 39
+		replaceChars['/'] = '/'; 		// 47
+		replaceChars['\\'] = '\\'; 		// 92
+	}
+
+	//	public static String encodeTextForJSON(String text) {
+	//		if (text == null) {
+	//			return null;
+	//		}
+	//		text = text.replace("\\", "\\\\");
+	//		text = text.replaceAll("\"", "\\\\\"");
+	//		return text;
+	//	}
+
+	public static String encodeTextForJSON(String text, boolean browserCompatible) {
 		if (text == null) {
 			return null;
 		}
-		text = text.replace("\\", "\\\\");
-		text = text.replaceAll("\"", "\\\\\"");
-		return text;
+
+		int           length  = text.length();
+		StringBuilder builder = new StringBuilder();
+		if (browserCompatible) {
+			for (int i = 0; i < length; i++) {
+				char ch = text.charAt(i);
+				if (ch == '\b' //
+						|| ch == '\f' //
+						|| ch == '\n' //
+						|| ch == '\r' //
+						|| ch == '\t' //
+						|| ch == '"' //
+						|| ch == '/' //
+						|| ch == '\\') {
+					builder.append('\\');
+					builder.append(replaceChars[(int) ch]);
+					continue;
+				}
+				builder.append(ch);
+			}
+		} else {
+			for (int i = 0; i < length; i++) {
+				char ch = text.charAt(i);
+				if (ch == '"' || ch == '\\') {
+					builder.append('\\');
+					builder.append(replaceChars[(int) ch]);
+					continue;
+				}
+				builder.append(ch);
+			}
+		}
+		return builder.toString();
+	}
+
+	public static void main(String[] args) {
+		//		char x = '\n';
+		//		char x = '\n';
+		char x = '>';
+		int  y = x;
+		System.out.println(y);
+		System.out.println(Integer.toHexString(y));
+		System.out.println("&#x" + Integer.toHexString(y));
 	}
 
 	public static String encodeTextForXML(String text) {
 		if (text == null) {
 			return null;
 		}
-		char[] src = text.toCharArray();
+		char[]        src     = text.toCharArray();
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0, length = src.length; i < length; i++) {
 			char key = src[i];
@@ -206,8 +277,8 @@ public class XCOUtil {
 			if (nextIndex == -1) {
 				return str.endsWith(pattern.substring(1));
 			}
-			String part = pattern.substring(1, nextIndex);
-			int partIndex = str.indexOf(part);
+			String part      = pattern.substring(1, nextIndex);
+			int    partIndex = str.indexOf(part);
 			while (partIndex != -1) {
 				if (simpleMatch(pattern.substring(nextIndex), str.substring(partIndex + part.length()))) {
 					return true;
