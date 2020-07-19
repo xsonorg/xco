@@ -11,5 +11,5 @@ public interface IField extends DataType {
 
 	void toXMLString(StringBuilder builder);
 
-	void toJSONString(StringBuilder builder, boolean encode);
+	void toJSONString(StringBuilder builder, boolean browserCompatible);
 }

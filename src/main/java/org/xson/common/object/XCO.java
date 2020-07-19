@@ -41,9 +41,9 @@ public class XCO implements Serializable, Cloneable {
 		this.compatible = compatible;
 	}
 
-	public void setReadOnly(boolean readOnly) {
-		this.readOnly = readOnly;
-	}
+	//	public void setReadOnly(boolean readOnly) {
+	//		this.readOnly = readOnly;
+	//	}
 
 	public void setCompatible(boolean compatible) {
 		this.compatible = compatible;
@@ -57,12 +57,18 @@ public class XCO implements Serializable, Cloneable {
 		return compatible;
 	}
 
+	private void checkReadOnly() {
+		if (this.readOnly) {
+			throw new XCOException("the current XCO object is in read-only mode.");
+		}
+	}
+
 	public Integer getCode() {
 		IField fieldValue = getField("$$CODE");
 		if (null == fieldValue) {
 			return null;
 		}
-		Object value = fieldValue.getValue(DataType.INT_TYPE);
+		Object value = fieldValue.getValue(DataType.INT_TYPE, false);
 		return ((Integer) value).intValue();
 	}
 
@@ -71,7 +77,7 @@ public class XCO implements Serializable, Cloneable {
 		if (null == fieldValue) {
 			return null;
 		}
-		Object value = fieldValue.getValue(DataType.STRING_TYPE);
+		Object value = fieldValue.getValue(DataType.STRING_TYPE, false);
 		return (String) value;
 	}
 
@@ -111,6 +117,7 @@ public class XCO implements Serializable, Cloneable {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void setObjectValue(String field, Object value) {
+		checkReadOnly();
 		if (null == value) {
 			remove(field);// 删除
 			return;
@@ -280,10 +287,12 @@ public class XCO implements Serializable, Cloneable {
 	// ///set....
 
 	public final void setByteValue(String field, byte var) {
+		checkReadOnly();
 		setField(field, new ByteField(field, var));
 	}
 
 	public final void setByteArrayValue(String field, byte[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -292,10 +301,12 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setShortValue(String field, short var) {
+		checkReadOnly();
 		setField(field, new ShortField(field, var));
 	}
 
 	public final void setShortArrayValue(String field, short[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -304,10 +315,12 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setLongValue(String field, long var) {
+		checkReadOnly();
 		setField(field, new LongField(field, var));
 	}
 
 	public final void setLongArrayValue(String field, long[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -316,10 +329,12 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setFloatValue(String field, float var) {
+		checkReadOnly();
 		setField(field, new FloatField(field, var));
 	}
 
 	public final void setFloatArrayValue(String field, float[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -328,10 +343,12 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setDoubleValue(String field, double var) {
+		checkReadOnly();
 		setField(field, new DoubleField(field, var));
 	}
 
 	public final void setDoubleArrayValue(String field, double[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -340,10 +357,12 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setCharValue(String field, char var) {
+		checkReadOnly();
 		setField(field, new CharField(field, var));
 	}
 
 	public final void setCharArrayValue(String field, char[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -352,10 +371,12 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setBooleanValue(String field, boolean var) {
+		checkReadOnly();
 		setField(field, new BooleanField(field, var));
 	}
 
 	public final void setBooleanArrayValue(String field, boolean[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -364,6 +385,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setDateTimeValue(String field, java.util.Date var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -372,6 +394,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setDateValue(String field, java.sql.Date var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -380,6 +403,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setTimeValue(String field, java.sql.Time var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -388,6 +412,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setTimestampValue(String field, java.sql.Timestamp var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -396,6 +421,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setBigIntegerValue(String field, BigInteger var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -404,6 +430,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setBigDecimalValue(String field, BigDecimal var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -412,10 +439,12 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setIntegerValue(String field, int var) {
+		checkReadOnly();
 		setField(field, new IntegerField(field, var));
 	}
 
 	public final void setIntegerArrayValue(String field, int[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -424,6 +453,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setStringValue(String field, String var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -432,6 +462,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setStringArrayValue(String field, String[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -440,6 +471,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setStringListValue(String field, List<String> var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -448,6 +480,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setStringSetValue(String field, Set<String> var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -456,6 +489,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setXCOValue(String field, XCO var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -464,6 +498,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setXCOArrayValue(String field, XCO[] var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -472,6 +507,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setXCOListValue(String field, List<XCO> var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -480,6 +516,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final void setXCOSetValue(String field, Set<XCO> var) {
+		checkReadOnly();
 		if (null == var) {
 			remove(field);
 			return;
@@ -751,6 +788,15 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public final String getStringValue(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.STRING_TYPE);
+		return (String) value;
+	}
+
+	public final String getStringValue(String field, String dateFormat) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			return null;
@@ -1065,13 +1111,27 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public String toJSON() {
+		//		StringBuilder builder = new StringBuilder(1024);
+		//		builder.append("{");
+		//		for (int i = 0, size = fieldValueList.size(); i < size; i++) {
+		//			if (i > 0) {
+		//				builder.append(",");
+		//			}
+		//			fieldValueList.get(i).toJSONString(builder);
+		//		}
+		//		builder.append("}");
+		//		return builder.toString();
+		return toJSON(false);
+	}
+
+	public String toJSON(boolean browserCompatible) {
 		StringBuilder builder = new StringBuilder(1024);
 		builder.append("{");
 		for (int i = 0, size = fieldValueList.size(); i < size; i++) {
 			if (i > 0) {
 				builder.append(",");
 			}
-			fieldValueList.get(i).toJSONString(builder);
+			fieldValueList.get(i).toJSONString(builder, browserCompatible);
 		}
 		builder.append("}");
 		return builder.toString();
@@ -1103,7 +1163,14 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public XCO clone() {
-		XCO xco = new XCO();
+		//		XCO xco = new XCO();
+		XCO xco = new XCO(isReadOnly(), isCompatible());
+		xco.copyFrom(this);
+		return xco;
+	}
+
+	public XCO clone(boolean readOnly, boolean compatible) {
+		XCO xco = new XCO(readOnly, compatible);
 		xco.copyFrom(this);
 		return xco;
 	}
@@ -1117,6 +1184,14 @@ public class XCO implements Serializable, Cloneable {
 		XMLElement xmlNode = new XMLElement();
 		xmlNode.parseString(xml);
 		XCO xco = new XCO();
+		xco.fromXML0(xmlNode);
+		return xco;
+	}
+
+	public static XCO fromXML(String xml, boolean readOnly, boolean compatible) {
+		XMLElement xmlNode = new XMLElement();
+		xmlNode.parseString(xml);
+		XCO xco = new XCO(readOnly, compatible);
 		xco.fromXML0(xmlNode);
 		return xco;
 	}

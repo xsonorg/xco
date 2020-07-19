@@ -17,16 +17,16 @@ public class XCOUtil {
 		replaceChars['\5'] = '5';
 		replaceChars['\6'] = '6';
 		replaceChars['\7'] = '7';
-		replaceChars['\b'] = 'b'; 		// 8
-		replaceChars['\t'] = 't'; 		// 9
-		replaceChars['\n'] = 'n'; 		// 10
-		replaceChars['\u000B'] = 'v'; 	// 11
-		replaceChars['\f'] = 'f'; 		// 12
-		replaceChars['\r'] = 'r'; 		// 13
-		replaceChars['\"'] = '"'; 		// 34
-		replaceChars['\''] = '\''; 		// 39
-		replaceChars['/'] = '/'; 		// 47
-		replaceChars['\\'] = '\\'; 		// 92
+		replaceChars['\b'] = 'b'; // 8
+		replaceChars['\t'] = 't'; // 9
+		replaceChars['\n'] = 'n'; // 10
+		replaceChars['\u000B'] = 'v'; // 11
+		replaceChars['\f'] = 'f'; // 12
+		replaceChars['\r'] = 'r'; // 13
+		replaceChars['\"'] = '"'; // 34
+		replaceChars['\''] = '\''; // 39
+		replaceChars['/'] = '/'; // 47
+		replaceChars['\\'] = '\\'; // 92
 	}
 
 	//	public static String encodeTextForJSON(String text) {
@@ -36,6 +36,24 @@ public class XCOUtil {
 	//		text = text.replace("\\", "\\\\");
 	//		text = text.replaceAll("\"", "\\\\\"");
 	//		return text;
+	//	}
+
+	//	public static void main(String[] args) {
+	//		//		char x = '\n';
+	//		//		char x = '\n';
+	//		//		char x = '>';
+	//		//		int  y = x;
+	//		//		System.out.println(y);
+	//		//		System.out.println(Integer.toHexString(y));
+	//		//		System.out.println("&#x" + Integer.toHexString(y));
+	//		char[] chs = { '&', '>', '<', '\'', '"', '\r', '\n' };
+	//		for (int i = 0; i < chs.length; i++) {
+	//			char x = chs[i];
+	//			int  y = x;
+	//			//			System.out.println(y);
+	//			//			System.out.println(Integer.toHexString(y));
+	//			System.out.println("&#x" + Integer.toHexString(y));
+	//		}
 	//	}
 
 	public static String encodeTextForJSON(String text, boolean browserCompatible) {
@@ -76,24 +94,14 @@ public class XCOUtil {
 		return builder.toString();
 	}
 
-	public static void main(String[] args) {
-		//		char x = '\n';
-		//		char x = '\n';
-		char x = '>';
-		int  y = x;
-		System.out.println(y);
-		System.out.println(Integer.toHexString(y));
-		System.out.println("&#x" + Integer.toHexString(y));
-	}
-
 	public static String encodeTextForXML(String text) {
 		if (text == null) {
 			return null;
 		}
-		char[]        src     = text.toCharArray();
+		int           length  = text.length();
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0, length = src.length; i < length; i++) {
-			char key = src[i];
+		for (int i = 0; i < length; i++) {
+			char key = text.charAt(i);
 			switch (key) {
 			case '&':
 				builder.append("&amp;");
@@ -111,6 +119,7 @@ public class XCOUtil {
 				builder.append("&quot;");
 				break;
 			case '\r':
+				builder.append("&#xd;");
 				break;
 			case '\n':
 				builder.append("&#xa;");
@@ -143,11 +152,12 @@ public class XCOUtil {
 			case '"':
 				builder.append("&quot;");
 				break;
-			// case '\r':
-			// break;
-			// case '\n':
-			// builder.append("&#xa;");
-			// break;
+			case '\r':
+				builder.append("&#xd;");
+				break;
+			case '\n':
+				builder.append("&#xa;");
+				break;
 			default:
 				builder.append(key);
 				break;
@@ -168,10 +178,101 @@ public class XCOUtil {
 			return "&apos;";
 		case '"':
 			return "&quot;";
+		case '\r':
+			return "&#xd;";
+		case '\n':
+			return "&#xa;";
 		default:
 			return src + "";
 		}
 	}
+
+	//	public static String encodeTextForXML(String text) {
+	//		if (text == null) {
+	//			return null;
+	//		}
+	//		char[]        src     = text.toCharArray();
+	//		StringBuilder builder = new StringBuilder();
+	//		for (int i = 0, length = src.length; i < length; i++) {
+	//			char key = src[i];
+	//			switch (key) {
+	//			case '&':
+	//				builder.append("&amp;");
+	//				break;
+	//			case '>':
+	//				builder.append("&gt;");
+	//				break;
+	//			case '<':
+	//				builder.append("&lt;");
+	//				break;
+	//			case '\'':
+	//				builder.append("&apos;");
+	//				break;
+	//			case '"':
+	//				builder.append("&quot;");
+	//				break;
+	//			case '\r':
+	//				break;
+	//			case '\n':
+	//				builder.append("&#xa;");
+	//				break;
+	//			default:
+	//				builder.append(key);
+	//				break;
+	//			}
+	//		}
+	//		return builder.toString();
+	//	}
+
+	//	public static String encodeTextForXML(char[] src) {
+	//		StringBuilder builder = new StringBuilder();
+	//		for (int i = 0, length = src.length; i < length; i++) {
+	//			char key = src[i];
+	//			switch (key) {
+	//			case '&':
+	//				builder.append("&amp;");
+	//				break;
+	//			case '>':
+	//				builder.append("&gt;");
+	//				break;
+	//			case '<':
+	//				builder.append("&lt;");
+	//				break;
+	//			case '\'':
+	//				builder.append("&apos;");
+	//				break;
+	//			case '"':
+	//				builder.append("&quot;");
+	//				break;
+	//			// case '\r':
+	//			// break;
+	//			// case '\n':
+	//			// builder.append("&#xa;");
+	//			// break;
+	//			default:
+	//				builder.append(key);
+	//				break;
+	//			}
+	//		}
+	//		return builder.toString();
+	//	}
+
+	//	public static String encodeTextForXML(char src) {
+	//		switch (src) {
+	//		case '&':
+	//			return "&amp;";
+	//		case '>':
+	//			return "&gt;";
+	//		case '<':
+	//			return "&lt;";
+	//		case '\'':
+	//			return "&apos;";
+	//		case '"':
+	//			return "&quot;";
+	//		default:
+	//			return src + "";
+	//		}
+	//	}
 
 	public static String getDateTimeString(java.util.Date date) {
 		return getDateTimeString(date, DataType.DATETIME_FORMAT);
