@@ -32,33 +32,6 @@ public class XCOUtil {
 		replaceChars['\\'] = '\\'; // 92
 	}
 
-	//	public static String encodeTextForJSON(String text) {
-	//		if (text == null) {
-	//			return null;
-	//		}
-	//		text = text.replace("\\", "\\\\");
-	//		text = text.replaceAll("\"", "\\\\\"");
-	//		return text;
-	//	}
-
-	//	public static void main(String[] args) {
-	//		//		char x = '\n';
-	//		//		char x = '\n';
-	//		//		char x = '>';
-	//		//		int  y = x;
-	//		//		System.out.println(y);
-	//		//		System.out.println(Integer.toHexString(y));
-	//		//		System.out.println("&#x" + Integer.toHexString(y));
-	//		char[] chs = { '&', '>', '<', '\'', '"', '\r', '\n' };
-	//		for (int i = 0; i < chs.length; i++) {
-	//			char x = chs[i];
-	//			int  y = x;
-	//			//			System.out.println(y);
-	//			//			System.out.println(Integer.toHexString(y));
-	//			System.out.println("&#x" + Integer.toHexString(y));
-	//		}
-	//	}
-
 	public static String encodeTextForJSON(String text, boolean browserCompatible) {
 		if (text == null) {
 			return null;
@@ -228,93 +201,6 @@ public class XCOUtil {
 		}
 	}
 
-	//	public static String encodeTextForXML(String text) {
-	//		if (text == null) {
-	//			return null;
-	//		}
-	//		char[]        src     = text.toCharArray();
-	//		StringBuilder builder = new StringBuilder();
-	//		for (int i = 0, length = src.length; i < length; i++) {
-	//			char key = src[i];
-	//			switch (key) {
-	//			case '&':
-	//				builder.append("&amp;");
-	//				break;
-	//			case '>':
-	//				builder.append("&gt;");
-	//				break;
-	//			case '<':
-	//				builder.append("&lt;");
-	//				break;
-	//			case '\'':
-	//				builder.append("&apos;");
-	//				break;
-	//			case '"':
-	//				builder.append("&quot;");
-	//				break;
-	//			case '\r':
-	//				break;
-	//			case '\n':
-	//				builder.append("&#xa;");
-	//				break;
-	//			default:
-	//				builder.append(key);
-	//				break;
-	//			}
-	//		}
-	//		return builder.toString();
-	//	}
-
-	//	public static String encodeTextForXML(char[] src) {
-	//		StringBuilder builder = new StringBuilder();
-	//		for (int i = 0, length = src.length; i < length; i++) {
-	//			char key = src[i];
-	//			switch (key) {
-	//			case '&':
-	//				builder.append("&amp;");
-	//				break;
-	//			case '>':
-	//				builder.append("&gt;");
-	//				break;
-	//			case '<':
-	//				builder.append("&lt;");
-	//				break;
-	//			case '\'':
-	//				builder.append("&apos;");
-	//				break;
-	//			case '"':
-	//				builder.append("&quot;");
-	//				break;
-	//			// case '\r':
-	//			// break;
-	//			// case '\n':
-	//			// builder.append("&#xa;");
-	//			// break;
-	//			default:
-	//				builder.append(key);
-	//				break;
-	//			}
-	//		}
-	//		return builder.toString();
-	//	}
-
-	//	public static String encodeTextForXML(char src) {
-	//		switch (src) {
-	//		case '&':
-	//			return "&amp;";
-	//		case '>':
-	//			return "&gt;";
-	//		case '<':
-	//			return "&lt;";
-	//		case '\'':
-	//			return "&apos;";
-	//		case '"':
-	//			return "&quot;";
-	//		default:
-	//			return src + "";
-	//		}
-	//	}
-
 	public static String getDateTimeString(java.util.Date date) {
 		return getDateTimeString(date, DataType.DATETIME_FORMAT);
 	}
@@ -448,28 +334,28 @@ public class XCOUtil {
 
 	private static short toShortExact(int value) {
 		if ((short) value != value) {
-			throw new ArithmeticException();
+			throw new ArithmeticException("Out of range");
 		}
 		return (short) value;
 	}
 
 	private static short toShortExact(long value) {
 		if ((short) value != value) {
-			throw new ArithmeticException();
+			throw new ArithmeticException("Out of range");
 		}
 		return (short) value;
 	}
 
 	private static int toIntExact(long value) {
 		if ((int) value != value) {
-			throw new ArithmeticException();
+			throw new ArithmeticException("Out of range");
 		}
 		return (int) value;
 	}
 
 	private static float toFloatExact(int value) {
 		if ((float) value != (double) value) {
-			throw new ArithmeticException();
+			throw new ArithmeticException("Out of range");
 		}
 		return (float) value;
 	}
@@ -481,14 +367,14 @@ public class XCOUtil {
 
 	private static float toFloatExact(double value) {
 		if ((float) value != value) {
-			throw new ArithmeticException();
+			throw new ArithmeticException("Out of range");
 		}
 		return (float) value;
 	}
 
 	private static double toDoubleExact(long value) {
 		if ((long) ((double) value) != value) {
-			throw new ArithmeticException();
+			throw new ArithmeticException("Out of range");
 		}
 		return (double) value;
 	}
@@ -502,7 +388,14 @@ public class XCOUtil {
 			return ((Boolean) src).booleanValue();
 		}
 		if (String.class == clazz) {
-			return Boolean.parseBoolean((String) src);
+			//			return Boolean.parseBoolean((String) src);
+			String val = (String) src;
+			if ("true".equalsIgnoreCase(val)) {
+				return true;
+			}
+			if ("false".equalsIgnoreCase(val)) {
+				return false;
+			}
 		}
 		throw new NumberFormatException("unsupported types '" + clazz + "' to boolean");
 	}
@@ -806,4 +699,120 @@ public class XCOUtil {
 		}
 		throw new NumberFormatException("unsupported types '" + clazz + "' to java.sql.Timestamp");
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+
+	//	public static String encodeTextForJSON(String text) {
+	//		if (text == null) {
+	//			return null;
+	//		}
+	//		text = text.replace("\\", "\\\\");
+	//		text = text.replaceAll("\"", "\\\\\"");
+	//		return text;
+	//	}
+
+	//	public static void main(String[] args) {
+	//		//		char x = '\n';
+	//		//		char x = '\n';
+	//		//		char x = '>';
+	//		//		int  y = x;
+	//		//		System.out.println(y);
+	//		//		System.out.println(Integer.toHexString(y));
+	//		//		System.out.println("&#x" + Integer.toHexString(y));
+	//		char[] chs = { '&', '>', '<', '\'', '"', '\r', '\n' };
+	//		for (int i = 0; i < chs.length; i++) {
+	//			char x = chs[i];
+	//			int  y = x;
+	//			//			System.out.println(y);
+	//			//			System.out.println(Integer.toHexString(y));
+	//			System.out.println("&#x" + Integer.toHexString(y));
+	//		}
+	//	}
+
+	//	public static String encodeTextForXML(String text) {
+	//		if (text == null) {
+	//			return null;
+	//		}
+	//		char[]        src     = text.toCharArray();
+	//		StringBuilder builder = new StringBuilder();
+	//		for (int i = 0, length = src.length; i < length; i++) {
+	//			char key = src[i];
+	//			switch (key) {
+	//			case '&':
+	//				builder.append("&amp;");
+	//				break;
+	//			case '>':
+	//				builder.append("&gt;");
+	//				break;
+	//			case '<':
+	//				builder.append("&lt;");
+	//				break;
+	//			case '\'':
+	//				builder.append("&apos;");
+	//				break;
+	//			case '"':
+	//				builder.append("&quot;");
+	//				break;
+	//			case '\r':
+	//				break;
+	//			case '\n':
+	//				builder.append("&#xa;");
+	//				break;
+	//			default:
+	//				builder.append(key);
+	//				break;
+	//			}
+	//		}
+	//		return builder.toString();
+	//	}
+
+	//	public static String encodeTextForXML(char[] src) {
+	//		StringBuilder builder = new StringBuilder();
+	//		for (int i = 0, length = src.length; i < length; i++) {
+	//			char key = src[i];
+	//			switch (key) {
+	//			case '&':
+	//				builder.append("&amp;");
+	//				break;
+	//			case '>':
+	//				builder.append("&gt;");
+	//				break;
+	//			case '<':
+	//				builder.append("&lt;");
+	//				break;
+	//			case '\'':
+	//				builder.append("&apos;");
+	//				break;
+	//			case '"':
+	//				builder.append("&quot;");
+	//				break;
+	//			// case '\r':
+	//			// break;
+	//			// case '\n':
+	//			// builder.append("&#xa;");
+	//			// break;
+	//			default:
+	//				builder.append(key);
+	//				break;
+	//			}
+	//		}
+	//		return builder.toString();
+	//	}
+
+	//	public static String encodeTextForXML(char src) {
+	//		switch (src) {
+	//		case '&':
+	//			return "&amp;";
+	//		case '>':
+	//			return "&gt;";
+	//		case '<':
+	//			return "&lt;";
+	//		case '\'':
+	//			return "&apos;";
+	//		case '"':
+	//			return "&quot;";
+	//		default:
+	//			return src + "";
+	//		}
+	//	}
 }

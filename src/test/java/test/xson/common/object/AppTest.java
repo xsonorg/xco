@@ -204,6 +204,7 @@ public class AppTest {
 
 	@Test
 	public void test09() {
+		System.out.println("\n=========================filters==========================");
 		XCO xco = new XCO();
 		xco.setStringValue("name", "日本");
 		xco.setStringValue("name1", "日本");
@@ -216,8 +217,58 @@ public class AppTest {
 
 	@Test
 	public void test10() {
-		//		XCO xco = new XCO();
-		//		xco.setIntegerValue("x", 1).set("x", 2L).getStringSetValue(field)
+		System.out.println("\n=========================XCO字符编码==========================");
+		XCO xco = new XCO();
+		xco.setStringValue("s1", "1&2>3<4'5\"6\r\n7");
+		xco.setCharArrayValue("sa1", new char[] { '1', '&', '2', '>', '3', '<', '4', '\'', '5', '"', '6', '\0', '7', '\n', '8' });
+		String xml = xco.toXMLString();
+		System.out.println(xco);
+		System.out.println(xco.getStringValue("s1"));
+		System.out.println(xco.getCharArrayValue("sa1"));
+		System.out.println();
+
+		XCO xco1 = XCO.fromXML(xml);
+		System.out.println(xco1.getStringValue("s1"));
+		System.out.println(xco1.getCharArrayValue("sa1"));
+	}
+
+	@Test
+	public void test11() {
+		System.out.println("\n=========================JSON字符编码==========================");
+		XCO xco = new XCO();
+		xco.setStringValue("s1", "1&2>3<4'5\"6\r\n7");
+		xco.setCharArrayValue("sa1", new char[] { '1', '\f', '2', '\t', '3', '\b', '4', '/', '5', '"', '6', '\\', '7', '\n', '8' });
+		String xml = xco.toXMLString();
+		System.out.println(xco);
+		System.out.println(xco.toJSON());
+		System.out.println(xco.toJSON(true));
+		System.out.println();
+
+		XCO xco1 = XCO.fromXML(xml);
+		System.out.println(xco1.toJSON());
+		System.out.println(xco1.toJSON(true));
+	}
+
+	@Test
+	public void test12() {
+		System.out.println("\n=========================属性字符串长度测试==========================");
+		//		String        base = "1234567890";
+		String        base = "*";
+		StringBuilder sb   = new StringBuilder();
+		int           max  = 102400000;
+		for (int i = 0; i < max; i++) {
+			sb.append(base);
+		}
+		String s = sb.toString();
+		System.out.println("length:" + s.length());
+		XCO xco = new XCO();
+		xco.setStringValue("s", s);
+		String xml  = xco.toXMLString();
+		//		System.out.println(xml);
+		XCO    xco1 = XCO.fromXML(xml);
+		//		System.out.println(xco1);
+		System.out.println("length:" + xco1.getStringValue("s").length());
+		//		System.out.println(xco1.get("s"));
 	}
 
 	@Test
@@ -231,5 +282,8 @@ public class AppTest {
 		test07();
 		test08();
 		test09();
+		test10();
+		test11();
+		test12();
 	}
 }
