@@ -2,11 +2,11 @@ package org.xson.common.object;
 
 public class DateField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private java.util.Date		value;
+	private java.util.Date    value;
 
 	public DateField(String name, java.util.Date value) {
 		this.name = name;
@@ -41,7 +41,7 @@ public class DateField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":\"").append(XCOUtil.getDateTimeString(this.value)).append("\"");
 	}
 

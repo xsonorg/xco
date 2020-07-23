@@ -2,11 +2,11 @@ package org.xson.common.object;
 
 public class StringField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private String				value;
+	private String            value;
 
 	public StringField(String name, String value) {
 		this.name = name;
@@ -36,8 +36,8 @@ public class StringField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
-		builder.append("\"").append(this.name).append("\"").append(":\"").append(XCOUtil.encodeTextForJSON(this.value)).append("\"");
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
+		builder.append("\"").append(this.name).append("\"").append(":\"").append(XCOUtil.encodeTextForJSON(this.value, browserCompatible)).append("\"");
 	}
 
 	@Override

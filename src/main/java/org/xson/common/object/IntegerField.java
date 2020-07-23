@@ -2,11 +2,11 @@ package org.xson.common.object;
 
 public class IntegerField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private int					value;
+	private int               value;
 
 	public IntegerField(String name, int value) {
 		this.name = name;
@@ -24,9 +24,10 @@ public class IntegerField implements IField {
 			return value;
 		}
 		// 向上兼容, 向下会造成数据丢失
-		if (dataType == LONG_TYPE) {
-			return Long.valueOf(value);
-		}
+		// 此处取消兼容性，由外层统一处理
+		//		if (dataType == LONG_TYPE) {
+		//			return Long.valueOf(value);
+		//		}
 		throw new XCOException("Type mismatch for field: " + this.name);
 	}
 
@@ -40,7 +41,7 @@ public class IntegerField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":").append(this.value);
 	}
 

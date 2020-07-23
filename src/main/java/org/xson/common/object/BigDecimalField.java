@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public class BigDecimalField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private BigDecimal			value;
+	private BigDecimal        value;
 
 	public BigDecimalField(String name, BigDecimal value) {
 		this.name = name;
@@ -38,7 +38,7 @@ public class BigDecimalField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		// builder.append("\"").append(this.name).append("\"").append(":").append(this.value.toString());
 		builder.append("\"").append(this.name).append("\"").append(":\"").append(this.value.toString()).append("\"");
 	}

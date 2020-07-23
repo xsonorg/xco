@@ -4,8 +4,7 @@ public interface IField extends DataType {
 
 	Object getValue();
 
-	//	Object getValue(int dataType);
-	Object getValue(int dataType, boolean compatible);
+	Object getValue(int dataType);
 
 	IField cloneSelf();
 

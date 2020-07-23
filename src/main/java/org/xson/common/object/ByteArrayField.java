@@ -2,17 +2,17 @@ package org.xson.common.object;
 
 public class ByteArrayField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private byte[]				value;
+	private byte[]            value;
 
 	public ByteArrayField(String name, byte[] value) {
 		this.name = name;
 		this.value = value;
 	}
-	
+
 	@Override
 	public Object getValue() {
 		return value;
@@ -64,7 +64,7 @@ public class ByteArrayField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":").append("[");
 		for (int i = 0; i < this.value.length; i++) {
 			if (i > 0) {

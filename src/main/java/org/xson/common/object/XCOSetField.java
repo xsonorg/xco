@@ -5,11 +5,11 @@ import java.util.Set;
 
 public class XCOSetField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private Set<XCO>			value;
+	private Set<XCO>          value;
 
 	public XCOSetField(String name, Set<XCO> value) {
 		this.name = name;
@@ -39,14 +39,14 @@ public class XCOSetField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":").append("[");
 		int i = 0;
 		for (XCO xco : value) {
 			if (i++ > 0) {
 				builder.append(",");
 			}
-			builder.append(xco.toJSON());
+			builder.append(xco.toJSON(browserCompatible));
 		}
 		builder.append("]");
 	}

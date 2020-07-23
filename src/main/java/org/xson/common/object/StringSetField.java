@@ -5,11 +5,11 @@ import java.util.Set;
 
 public class StringSetField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private Set<String>			value;
+	private Set<String>       value;
 
 	public StringSetField(String name, Set<String> value) {
 		this.name = name;
@@ -45,7 +45,7 @@ public class StringSetField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":").append("[");
 		int i = 0;
 		for (String str : value) {
@@ -53,7 +53,7 @@ public class StringSetField implements IField {
 				builder.append(",");
 			}
 			builder.append("\"");
-			builder.append(XCOUtil.encodeTextForJSON(str));
+			builder.append(XCOUtil.encodeTextForJSON(str, browserCompatible));
 			builder.append("\"");
 		}
 		builder.append("]");

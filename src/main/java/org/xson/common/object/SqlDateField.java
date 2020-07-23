@@ -2,11 +2,11 @@ package org.xson.common.object;
 
 public class SqlDateField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private java.sql.Date		value;
+	private java.sql.Date     value;
 
 	public SqlDateField(String name, java.sql.Date value) {
 		this.name = name;
@@ -39,7 +39,7 @@ public class SqlDateField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":\"").append(XCOUtil.getDateString(this.value)).append("\"");
 	}
 

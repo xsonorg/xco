@@ -2,11 +2,11 @@ package org.xson.common.object;
 
 public class XCOArrayField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private XCO[]				value;
+	private XCO[]             value;
 
 	public XCOArrayField(String name, XCO[] value) {
 		this.name = name;
@@ -36,13 +36,13 @@ public class XCOArrayField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":").append("[");
 		for (int i = 0; i < this.value.length; i++) {
 			if (i > 0) {
 				builder.append(",");
 			}
-			builder.append(this.value[i].toJSON());
+			builder.append(this.value[i].toJSON(browserCompatible));
 		}
 		builder.append("]");
 	}

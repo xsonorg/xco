@@ -2,11 +2,11 @@ package org.xson.common.object;
 
 public class FloatField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private float				value;
+	private float             value;
 
 	public FloatField(String name, float value) {
 		this.name = name;
@@ -36,7 +36,7 @@ public class FloatField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":").append(this.value);
 	}
 
@@ -44,4 +44,5 @@ public class FloatField implements IField {
 	public IField cloneSelf() {
 		return new FloatField(name, value);
 	}
+
 }

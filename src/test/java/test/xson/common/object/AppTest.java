@@ -24,16 +24,16 @@ public class AppTest {
 		xco.setXCOValue("xx", xco2);
 
 		System.out.println(xco.toXMLString());
-		String xml = xco.toXMLString();
+		String xml  = xco.toXMLString();
 
-		XCO xco1 = XCO.fromXML(xml);
+		XCO    xco1 = XCO.fromXML(xml);
 
 		System.out.println(xco1.toXMLString());
 	}
 
 	@Test
 	public void test02() {
-		XCO xco = new XCO();
+		XCO   xco   = new XCO();
 
 		XCO[] array = new XCO[2];
 		array[0] = new XCO();
@@ -53,7 +53,7 @@ public class AppTest {
 
 	@Test
 	public void test03() {
-		XCO xco = new XCO();
+		XCO   xco   = new XCO();
 
 		XCO[] array = new XCO[2];
 		array[0] = new XCO();
@@ -78,7 +78,7 @@ public class AppTest {
 
 	@Test
 	public void test04() {
-		XCO xco = new XCO();
+		XCO   xco   = new XCO();
 
 		XCO[] array = new XCO[2];
 		array[0] = new XCO();
@@ -210,8 +210,14 @@ public class AppTest {
 		xco.setStringValue("name2", "日本");
 		xco.setStringValue("name3", "日本");
 		String[] filters = { "name*" };
-		String xml = xco.toXMLString(filters);
+		String   xml     = xco.toXMLString(filters);
 		System.out.println(xml);
+	}
+
+	@Test
+	public void test10() {
+		//		XCO xco = new XCO();
+		//		xco.setIntegerValue("x", 1).set("x", 2L).getStringSetValue(field)
 	}
 
 	@Test

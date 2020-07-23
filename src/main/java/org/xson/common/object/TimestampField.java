@@ -4,11 +4,11 @@ import java.sql.Timestamp;
 
 public class TimestampField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private Timestamp			value;
+	private Timestamp         value;
 
 	public TimestampField(String name, Timestamp value) {
 		this.name = name;
@@ -41,7 +41,7 @@ public class TimestampField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":\"").append(XCOUtil.getTimestampString(this.value)).append("\"");
 	}
 

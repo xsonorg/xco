@@ -25,8 +25,7 @@ public class XCO implements Serializable, Cloneable {
 	private ArrayList<String>       fieldList        = null;
 	private ArrayList<IField>       fieldValueList   = null;
 	private Object                  attachObject     = null;
-
-	private boolean                 readOnly         = false;
+	// 数据兼容性模式
 	private boolean                 compatible       = false;
 
 	public XCO() {
@@ -35,32 +34,23 @@ public class XCO implements Serializable, Cloneable {
 		this.fieldValueList = new ArrayList<IField>();
 	}
 
-	public XCO(boolean readOnly, boolean compatible) {
+	public XCO(boolean compatible) {
 		this();
-		this.readOnly = readOnly;
 		this.compatible = compatible;
 	}
 
-	//	public void setReadOnly(boolean readOnly) {
-	//		this.readOnly = readOnly;
-	//	}
-
-	public void setCompatible(boolean compatible) {
-		this.compatible = compatible;
+	private void throwCastException(String field, Object value, Class<?> expectedType, Throwable e) {
+		throw new XCOException("In compatible mode, field '" + field + "' type conversion exception. actual type: '" + value.getClass() + "', expected type: '" + expectedType
+				+ "', reason: " + e.getMessage());
 	}
 
-	public boolean isReadOnly() {
-		return readOnly;
+	public XCO setCompatible(boolean compatible) {
+		this.compatible = compatible;
+		return this;
 	}
 
 	public boolean isCompatible() {
 		return compatible;
-	}
-
-	private void checkReadOnly() {
-		if (this.readOnly) {
-			throw new XCOException("the current XCO object is in read-only mode.");
-		}
 	}
 
 	public Integer getCode() {
@@ -68,7 +58,7 @@ public class XCO implements Serializable, Cloneable {
 		if (null == fieldValue) {
 			return null;
 		}
-		Object value = fieldValue.getValue(DataType.INT_TYPE, false);
+		Object value = fieldValue.getValue(DataType.INT_TYPE);
 		return ((Integer) value).intValue();
 	}
 
@@ -77,7 +67,7 @@ public class XCO implements Serializable, Cloneable {
 		if (null == fieldValue) {
 			return null;
 		}
-		Object value = fieldValue.getValue(DataType.STRING_TYPE, false);
+		Object value = fieldValue.getValue(DataType.STRING_TYPE);
 		return (String) value;
 	}
 
@@ -116,11 +106,10 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public void setObjectValue(String field, Object value) {
-		checkReadOnly();
+	public XCO setObjectValue(String field, Object value) {
 		if (null == value) {
 			remove(field);// 删除
-			return;
+			return this;
 		}
 
 		if (value instanceof Byte) {
@@ -207,31 +196,11 @@ public class XCO implements Serializable, Cloneable {
 			throw new XCOException("Unsupported data type: " + value.getClass());
 		}
 
-	}
-
-	public Object getObjectValue(String field) {
-		// IField fieldValue = this.dateMap.get(field);
-		IField fieldValue = getField(field);
-		if (null != fieldValue) {
-			return fieldValue.getValue();
-		}
-		return null;
-	}
-
-	public Object get(String field) {
-		return getObjectValue(field);
+		return this;
 	}
 
 	public void remove(String field) {
 		if (exists(field)) {
-			// int i = 0;
-			// for (String fieldItem : fieldList) {
-			// if (field.equals(fieldItem)) {
-			// this.fieldList.remove(i);
-			// this.fieldValueList.remove(i);
-			// }
-			// i++;
-			// }
 			int i = this.fieldList.indexOf(field);
 			this.fieldList.remove(i);
 			this.fieldValueList.remove(i);
@@ -284,247 +253,273 @@ public class XCO implements Serializable, Cloneable {
 		return this.fieldList;
 	}
 
-	// ///set....
+	////////////////////////////////////SET////////////////////////////////////////
 
-	public final void setByteValue(String field, byte var) {
-		checkReadOnly();
-		setField(field, new ByteField(field, var));
+	public XCO set(String field, Object value) {
+		return this.setObjectValue(field, value);
 	}
 
-	public final void setByteArrayValue(String field, byte[] var) {
-		checkReadOnly();
+	public final XCO setByteValue(String field, byte var) {
+		setField(field, new ByteField(field, var));
+		return this;
+	}
+
+	public final XCO setByteArrayValue(String field, byte[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new ByteArrayField(field, var));
+		return this;
 	}
 
-	public final void setShortValue(String field, short var) {
-		checkReadOnly();
+	public final XCO setShortValue(String field, short var) {
 		setField(field, new ShortField(field, var));
+		return this;
 	}
 
-	public final void setShortArrayValue(String field, short[] var) {
-		checkReadOnly();
+	public final XCO setShortArrayValue(String field, short[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new ShortArrayField(field, var));
+		return this;
 	}
 
-	public final void setLongValue(String field, long var) {
-		checkReadOnly();
+	public final XCO setLongValue(String field, long var) {
 		setField(field, new LongField(field, var));
+		return this;
 	}
 
-	public final void setLongArrayValue(String field, long[] var) {
-		checkReadOnly();
+	public final XCO setLongArrayValue(String field, long[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new LongArrayField(field, var));
+		return this;
 	}
 
-	public final void setFloatValue(String field, float var) {
-		checkReadOnly();
+	public final XCO setFloatValue(String field, float var) {
 		setField(field, new FloatField(field, var));
+		return this;
 	}
 
-	public final void setFloatArrayValue(String field, float[] var) {
-		checkReadOnly();
+	public final XCO setFloatArrayValue(String field, float[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new FloatArrayField(field, var));
+		return this;
 	}
 
-	public final void setDoubleValue(String field, double var) {
-		checkReadOnly();
+	public final XCO setDoubleValue(String field, double var) {
 		setField(field, new DoubleField(field, var));
+		return this;
 	}
 
-	public final void setDoubleArrayValue(String field, double[] var) {
-		checkReadOnly();
+	public final XCO setDoubleArrayValue(String field, double[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new DoubleArrayField(field, var));
+		return this;
 	}
 
-	public final void setCharValue(String field, char var) {
-		checkReadOnly();
+	public final XCO setCharValue(String field, char var) {
 		setField(field, new CharField(field, var));
+		return this;
 	}
 
-	public final void setCharArrayValue(String field, char[] var) {
-		checkReadOnly();
+	public final XCO setCharArrayValue(String field, char[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new CharArrayField(field, var));
+		return this;
 	}
 
-	public final void setBooleanValue(String field, boolean var) {
-		checkReadOnly();
+	public final XCO setBooleanValue(String field, boolean var) {
 		setField(field, new BooleanField(field, var));
+		return this;
 	}
 
-	public final void setBooleanArrayValue(String field, boolean[] var) {
-		checkReadOnly();
+	public final XCO setBooleanArrayValue(String field, boolean[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new BooleanArrayField(field, var));
+		return this;
 	}
 
-	public final void setDateTimeValue(String field, java.util.Date var) {
-		checkReadOnly();
+	public final XCO setDateTimeValue(String field, java.util.Date var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new DateField(field, var));
+		return this;
 	}
 
-	public final void setDateValue(String field, java.sql.Date var) {
-		checkReadOnly();
+	public final XCO setDateValue(String field, java.sql.Date var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new SqlDateField(field, var));
+		return this;
 	}
 
-	public final void setTimeValue(String field, java.sql.Time var) {
-		checkReadOnly();
+	public final XCO setTimeValue(String field, java.sql.Time var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new SqlTimeField(field, var));
+		return this;
 	}
 
-	public final void setTimestampValue(String field, java.sql.Timestamp var) {
-		checkReadOnly();
+	public final XCO setTimestampValue(String field, java.sql.Timestamp var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new TimestampField(field, var));
+		return this;
 	}
 
-	public final void setBigIntegerValue(String field, BigInteger var) {
-		checkReadOnly();
+	public final XCO setBigIntegerValue(String field, BigInteger var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new BigIntegerField(field, var));
+		return this;
 	}
 
-	public final void setBigDecimalValue(String field, BigDecimal var) {
-		checkReadOnly();
+	public final XCO setBigDecimalValue(String field, BigDecimal var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new BigDecimalField(field, var));
+		return this;
 	}
 
-	public final void setIntegerValue(String field, int var) {
-		checkReadOnly();
+	public final XCO setIntegerValue(String field, int var) {
 		setField(field, new IntegerField(field, var));
+		return this;
 	}
 
-	public final void setIntegerArrayValue(String field, int[] var) {
-		checkReadOnly();
+	public final XCO setIntegerArrayValue(String field, int[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new IntegerArrayField(field, var));
+		return this;
 	}
 
-	public final void setStringValue(String field, String var) {
-		checkReadOnly();
+	public final XCO setStringValue(String field, String var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new StringField(field, var));
+		return this;
 	}
 
-	public final void setStringArrayValue(String field, String[] var) {
-		checkReadOnly();
+	public final XCO setStringArrayValue(String field, String[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new StringArrayField(field, var));
+		return this;
 	}
 
-	public final void setStringListValue(String field, List<String> var) {
-		checkReadOnly();
+	public final XCO setStringListValue(String field, List<String> var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new StringListField(field, var));
+		return this;
 	}
 
-	public final void setStringSetValue(String field, Set<String> var) {
-		checkReadOnly();
+	public final XCO setStringSetValue(String field, Set<String> var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new StringSetField(field, var));
+		return this;
 	}
 
-	public final void setXCOValue(String field, XCO var) {
-		checkReadOnly();
+	public final XCO setXCOValue(String field, XCO var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new XCOField(field, var));
+		return this;
 	}
 
-	public final void setXCOArrayValue(String field, XCO[] var) {
-		checkReadOnly();
+	public final XCO setXCOArrayValue(String field, XCO[] var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new XCOArrayField(field, var));
+		return this;
 	}
 
-	public final void setXCOListValue(String field, List<XCO> var) {
-		checkReadOnly();
+	public final XCO setXCOListValue(String field, List<XCO> var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new XCOListField(field, var));
+		return this;
 	}
 
-	public final void setXCOSetValue(String field, Set<XCO> var) {
-		checkReadOnly();
+	public final XCO setXCOSetValue(String field, Set<XCO> var) {
 		if (null == var) {
 			remove(field);
-			return;
+			return this;
 		}
 		setField(field, new XCOSetField(field, var));
+		return this;
 	}
 
-	// //get...
+	////////////////////////////////////GET////////////////////////////////////////
+
+	public Object getObjectValue(String field) {
+		return getObjectValue(field, null);
+	}
+
+	public Object getObjectValue(String field, Object defaultValue) {
+		IField fieldValue = getField(field);
+		if (null != fieldValue) {
+			return fieldValue.getValue();
+		}
+		return defaultValue;
+	}
+
+	public Object get(String field) {
+		return getObjectValue(field, null);
+	}
+
+	public Object get(String field, Object defaultValue) {
+		return getObjectValue(field, defaultValue);
+	}
+
+	// byte
 
 	public final byte getByteValue(String field) {
 		IField fieldValue = getField(field);
@@ -535,10 +530,23 @@ public class XCO implements Serializable, Cloneable {
 		return ((Byte) value).byteValue();
 	}
 
-	public final Byte getByte(String field) {
+	public final byte getByteValue(String field, byte defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
+		}
+		Object value = fieldValue.getValue(DataType.BYTE_TYPE);
+		return ((Byte) value).byteValue();
+	}
+
+	public final Byte getByte(String field) {
+		return getByte(field, null);
+	}
+
+	public final Byte getByte(String field, Byte defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
 		}
 		Object value = fieldValue.getValue(DataType.BYTE_TYPE);
 		return (Byte) value;
@@ -553,19 +561,58 @@ public class XCO implements Serializable, Cloneable {
 		return (byte[]) value;
 	}
 
+	// short
+
 	public final short getShortValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			throw new XCOException("The field does not exist: " + field);
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToShort(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, short.class, e);
+			}
+		}
+		Object value = fieldValue.getValue(DataType.SHORT_TYPE);
+		return ((Short) value).shortValue();
+	}
+
+	public final short getShortValue(String field, short defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToShort(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, short.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.SHORT_TYPE);
 		return ((Short) value).shortValue();
 	}
 
 	public final Short getShort(String field) {
+		return getShort(field, null);
+	}
+
+	public final Short getShort(String field, Short defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToShort(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, Short.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.SHORT_TYPE);
 		return (Short) value;
@@ -580,19 +627,124 @@ public class XCO implements Serializable, Cloneable {
 		return (short[]) value;
 	}
 
+	// int
+
+	public final int getIntegerValue(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			throw new XCOException("The field does not exist: " + field);
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToInt(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, int.class, e);
+			}
+		}
+		Object value = fieldValue.getValue(DataType.INT_TYPE);
+		return ((Integer) value).intValue();
+	}
+
+	public final int getIntegerValue(String field, int defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToInt(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, int.class, e);
+			}
+		}
+		Object value = fieldValue.getValue(DataType.INT_TYPE);
+		return ((Integer) value).intValue();
+	}
+
+	public final Integer getInteger(String field) {
+		return getInteger(field, null);
+	}
+
+	public final Integer getInteger(String field, Integer defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToInt(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, Integer.class, e);
+			}
+		}
+		Object value = fieldValue.getValue(DataType.INT_TYPE);
+		return (Integer) value;
+	}
+
+	public final int[] getIntegerArrayValue(String field) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return null;
+		}
+		Object value = fieldValue.getValue(DataType.INT_ARRAY_TYPE);
+		return (int[]) value;
+	}
+
+	// long
+
 	public final long getLongValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			throw new XCOException("The field does not exist: " + field);
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToLong(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, long.class, e);
+			}
+		}
+		Object value = fieldValue.getValue(DataType.LONG_TYPE);
+		return ((Long) value).longValue();
+	}
+
+	public final long getLongValue(String field, long defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToLong(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, long.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.LONG_TYPE);
 		return ((Long) value).longValue();
 	}
 
 	public final Long getLong(String field) {
+		return getLong(field, null);
+	}
+
+	public final Long getLong(String field, Long defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToLong(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, Long.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.LONG_TYPE);
 		return (Long) value;
@@ -607,19 +759,58 @@ public class XCO implements Serializable, Cloneable {
 		return (long[]) value;
 	}
 
+	// float
+
 	public final float getFloatValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			throw new XCOException("The field does not exist: " + field);
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToFloat(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, float.class, e);
+			}
+		}
+		Object value = fieldValue.getValue(DataType.FLOAT_TYPE);
+		return ((Float) value).floatValue();
+	}
+
+	public final float getFloatValue(String field, float defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToFloat(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, float.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.FLOAT_TYPE);
 		return ((Float) value).floatValue();
 	}
 
 	public final Float getFloat(String field) {
+		return getFloat(field, null);
+	}
+
+	public final Float getFloat(String field, Float defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToFloat(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, Float.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.FLOAT_TYPE);
 		return (Float) value;
@@ -634,19 +825,58 @@ public class XCO implements Serializable, Cloneable {
 		return (float[]) value;
 	}
 
+	// double
+
 	public final double getDoubleValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			throw new XCOException("The field does not exist: " + field);
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToDouble(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, double.class, e);
+			}
+		}
+		Object value = fieldValue.getValue(DataType.DOUBLE_TYPE);
+		return ((Double) value).doubleValue();
+	}
+
+	public final double getDoubleValue(String field, double defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToDouble(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, double.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.DOUBLE_TYPE);
 		return ((Double) value).doubleValue();
 	}
 
 	public final Double getDouble(String field) {
+		return getDouble(field, null);
+	}
+
+	public final Double getDouble(String field, Double defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToDouble(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, Double.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.DOUBLE_TYPE);
 		return (Double) value;
@@ -661,6 +891,8 @@ public class XCO implements Serializable, Cloneable {
 		return (double[]) value;
 	}
 
+	// char
+
 	public final char getCharValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
@@ -670,10 +902,23 @@ public class XCO implements Serializable, Cloneable {
 		return ((Character) value).charValue();
 	}
 
-	public final Character getChar(String field) {
+	public final char getCharValue(String field, char defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
+		}
+		Object value = fieldValue.getValue(DataType.CHAR_TYPE);
+		return ((Character) value).charValue();
+	}
+
+	public final Character getChar(String field) {
+		return getChar(field, null);
+	}
+
+	public final Character getChar(String field, Character defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
 		}
 		Object value = fieldValue.getValue(DataType.CHAR_TYPE);
 		return (Character) value;
@@ -688,19 +933,58 @@ public class XCO implements Serializable, Cloneable {
 		return (char[]) value;
 	}
 
+	// boolean
+
 	public final boolean getBooleanValue(String field) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			throw new XCOException("The field does not exist: " + field);
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToBoolean(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, boolean.class, e);
+			}
+		}
+		Object value = fieldValue.getValue(DataType.BOOLEAN_TYPE);
+		return ((Boolean) value).booleanValue();
+	}
+
+	public final boolean getBooleanValue(String field, boolean defaultValue) {
+		IField fieldValue = getField(field);
+		if (null == fieldValue) {
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToBoolean(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, boolean.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.BOOLEAN_TYPE);
 		return ((Boolean) value).booleanValue();
 	}
 
 	public final Boolean getBoolean(String field) {
+		return getBoolean(field, null);
+	}
+
+	public final Boolean getBoolean(String field, Boolean defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToBoolean(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, Boolean.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.BOOLEAN_TYPE);
 		return (Boolean) value;
@@ -715,94 +999,181 @@ public class XCO implements Serializable, Cloneable {
 		return (boolean[]) value;
 	}
 
+	// date
+
 	public final java.util.Date getDateTimeValue(String field) {
+		return getDateTimeValue(field, null);
+	}
+
+	public final java.util.Date getDateTimeValue(String field, String format) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			return null;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToDateTime(value, format);
+			} catch (Throwable e) {
+				throwCastException(field, value, java.util.Date.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.DATE_TYPE);
 		return (java.util.Date) value;
 	}
 
+	// sql.date
+
 	public final java.sql.Date getDateValue(String field) {
+		return getDateValue(field, null);
+	}
+
+	public final java.sql.Date getDateValue(String field, String format) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			return null;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToSqlDate(value, format);
+			} catch (Throwable e) {
+				throwCastException(field, value, java.sql.Date.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.SQLDATE_TYPE);
 		return (java.sql.Date) value;
 	}
 
+	// sql.time
+
 	public final java.sql.Time getTimeValue(String field) {
+		return getTimeValue(field, null);
+	}
+
+	public final java.sql.Time getTimeValue(String field, String format) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			return null;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToSqlTime(value, format);
+			} catch (Throwable e) {
+				throwCastException(field, value, java.sql.Time.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.SQLTIME_TYPE);
 		return (java.sql.Time) value;
 	}
 
+	// sql.Timestamp
+
 	public final java.sql.Timestamp getTimestampValue(String field) {
+		return getTimestampValue(field, null);
+	}
+
+	public final java.sql.Timestamp getTimestampValue(String field, String format) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			return null;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToSqlTimestamp(value, format);
+			} catch (Throwable e) {
+				throwCastException(field, value, java.sql.Timestamp.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.TIMESTAMP_TYPE);
 		return (java.sql.Timestamp) value;
 	}
 
+	// BigInteger
+
 	public final BigInteger getBigIntegerValue(String field) {
+		return getBigIntegerValue(field, null);
+	}
+
+	public final BigInteger getBigIntegerValue(String field, BigInteger defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
 		}
+
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToBigInteger(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, BigInteger.class, e);
+			}
+		}
+
 		Object value = fieldValue.getValue(DataType.BIGINTEGER_TYPE);
 		return (BigInteger) value;
 	}
 
+	// BigDecimal
+
 	public final BigDecimal getBigDecimalValue(String field) {
+		return getBigDecimalValue(field, null);
+	}
+
+	public final BigDecimal getBigDecimalValue(String field, BigDecimal defaultValue) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
 		}
+
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToBigDecimal(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, BigDecimal.class, e);
+			}
+		}
+
 		Object value = fieldValue.getValue(DataType.BIGDICIMAL_TYPE);
 		return (BigDecimal) value;
 	}
 
-	public final int getIntegerValue(String field) {
-		IField fieldValue = getField(field);
-		if (null == fieldValue) {
-			throw new XCOException("The field does not exist: " + field);
-		}
-		Object value = fieldValue.getValue(DataType.INT_TYPE);
-		return ((Integer) value).intValue();
-	}
-
-	public final int[] getIntegerArrayValue(String field) {
-		IField fieldValue = getField(field);
-		if (null == fieldValue) {
-			return null;
-		}
-		Object value = fieldValue.getValue(DataType.INT_ARRAY_TYPE);
-		return (int[]) value;
-	}
+	// string
 
 	public final String getStringValue(String field) {
+		return getStringValue(field, null, null);
+	}
+
+	public final String getStringValue(String field, String defaultValue) {
+		return getStringValue(field, defaultValue, null);
+	}
+
+	private final String getStringValue(String field, String defaultValue, String format) {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
-			return null;
+			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToString(value, format);
+			} catch (Throwable e) {
+				throwCastException(field, value, String.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.STRING_TYPE);
 		return (String) value;
 	}
 
-	public final String getStringValue(String field, String dateFormat) {
-		IField fieldValue = getField(field);
-		if (null == fieldValue) {
-			return null;
-		}
-		Object value = fieldValue.getValue(DataType.STRING_TYPE);
-		return (String) value;
+	public final String getStringValueFromDate(String field) {
+		return getStringValue(field, null, null);
+	}
+
+	public final String getStringValueFromDate(String field, String format) {
+		return getStringValue(field, null, format);
 	}
 
 	public final String[] getStringArrayValue(String field) {
@@ -833,6 +1204,8 @@ public class XCO implements Serializable, Cloneable {
 		Object value = fieldValue.getValue(DataType.STRING_SET_TYPE);
 		return (Set<String>) value;
 	}
+
+	// xco
 
 	public final XCO getXCOValue(String field) {
 		IField fieldValue = getField(field);
@@ -872,7 +1245,7 @@ public class XCO implements Serializable, Cloneable {
 		return (Set<XCO>) value;
 	}
 
-	// //////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////
 
 	@SuppressWarnings("unchecked")
 	private void fromXML0(XMLElement xmlNode) {
@@ -1111,16 +1484,6 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public String toJSON() {
-		//		StringBuilder builder = new StringBuilder(1024);
-		//		builder.append("{");
-		//		for (int i = 0, size = fieldValueList.size(); i < size; i++) {
-		//			if (i > 0) {
-		//				builder.append(",");
-		//			}
-		//			fieldValueList.get(i).toJSONString(builder);
-		//		}
-		//		builder.append("}");
-		//		return builder.toString();
 		return toJSON(false);
 	}
 
@@ -1163,14 +1526,13 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	public XCO clone() {
-		//		XCO xco = new XCO();
-		XCO xco = new XCO(isReadOnly(), isCompatible());
+		XCO xco = new XCO(isCompatible());
 		xco.copyFrom(this);
 		return xco;
 	}
 
-	public XCO clone(boolean readOnly, boolean compatible) {
-		XCO xco = new XCO(readOnly, compatible);
+	public XCO clone(boolean compatible) {
+		XCO xco = new XCO(compatible);
 		xco.copyFrom(this);
 		return xco;
 	}
@@ -1188,10 +1550,10 @@ public class XCO implements Serializable, Cloneable {
 		return xco;
 	}
 
-	public static XCO fromXML(String xml, boolean readOnly, boolean compatible) {
+	public static XCO fromXML(String xml, boolean compatible) {
 		XMLElement xmlNode = new XMLElement();
 		xmlNode.parseString(xml);
-		XCO xco = new XCO(readOnly, compatible);
+		XCO xco = new XCO(compatible);
 		xco.fromXML0(xmlNode);
 		return xco;
 	}

@@ -5,11 +5,11 @@ import java.util.List;
 
 public class StringListField implements IField {
 
-	private static final long	serialVersionUID	= 4848636595224033221L;
+	private static final long serialVersionUID = 4848636595224033221L;
 
-	protected String			name;
+	protected String          name;
 
-	private List<String>		value;
+	private List<String>      value;
 
 	public StringListField(String name, List<String> value) {
 		this.name = name;
@@ -45,14 +45,14 @@ public class StringListField implements IField {
 	}
 
 	@Override
-	public void toJSONString(StringBuilder builder) {
+	public void toJSONString(StringBuilder builder, boolean browserCompatible) {
 		builder.append("\"").append(this.name).append("\"").append(":").append("[");
 		for (int i = 0; i < this.value.size(); i++) {
 			if (i > 0) {
 				builder.append(",");
 			}
 			builder.append("\"");
-			builder.append(XCOUtil.encodeTextForJSON(this.value.get(i)));
+			builder.append(XCOUtil.encodeTextForJSON(this.value.get(i), browserCompatible));
 			builder.append("\"");
 		}
 		builder.append("]");
