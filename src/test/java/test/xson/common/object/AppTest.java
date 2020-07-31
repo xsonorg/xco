@@ -284,6 +284,6 @@ public class AppTest {
 		test09();
 		test10();
 		test11();
-		test12();
+		//		test12();
 	}
 }

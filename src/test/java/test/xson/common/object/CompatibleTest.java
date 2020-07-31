@@ -5,97 +5,132 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.junit.Test;
 import org.xson.common.object.XCO;
 
 public class CompatibleTest {
 
+	public static final String ANSI_RESET  = "u001B[0m";
+	public static final String ANSI_BLACK  = "u001B[30m";
+	public static final String ANSI_RED    = "u001B[31m";
+	public static final String ANSI_GREEN  = "u001B[32m";
+	public static final String ANSI_YELLOW = "u001B[33m";
+	public static final String ANSI_BLUE   = "u001B[34m";
+	public static final String ANSI_PURPLE = "u001B[35m";
+	public static final String ANSI_CYAN   = "u001B[36m";
+	public static final String ANSI_WHITE  = "u001B[37m";
+
+	public static void printColor() {
+		// 背景颜色代号(41-46)
+		// 前景色代号(31-36)
+		// 前景色代号和背景色代号可选，就是或可以写，也可以不写
+		// 数字+m：1加粗；3斜体；4下划线
+		// 格式：System.out.println("\33[前景色代号;背景色代号;数字m");
+		Random backgroundRandom = new Random();
+		Random fontRandom       = new Random();
+		for (int i = 1; i <= 50; i++) {
+			int font       = fontRandom.nextInt(6) + 31;
+			int background = backgroundRandom.nextInt(6) + 41;
+			System.out.format("前景色是%d,背景色是%d------\33[%d;%d;4m我是博主%n", font, background, font, background);
+		}
+	}
+
+	private void printOut(String str) {
+		System.out.println(str);
+		System.out.flush();
+	}
+
+	private void printErr(String str) {
+		System.err.println(str);
+	}
+
 	private void print(XCO xco1, Map<String, Boolean> flagMap) {
 		int max = 55;
 
-		System.out.println("\n\n");
+		printOut("\n\n");
 
 		if (flagMap.containsKey("byte")) {
 			// byte
-			System.out.println("\n=========================byte==========================");
+			printOut("\n=========================byte==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getByteValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getByteValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("short")) {
 			// short
-			System.out.println("\n=========================byte==========================");
+			printOut("\n=========================byte==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getShortValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getShortValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("int")) {
 			// int 
-			System.out.println("\n=========================int==========================");
+			printOut("\n=========================int==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getIntegerValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getIntegerValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("long")) {
 			// long
-			System.out.println("\n=========================long==========================");
+			printOut("\n=========================long==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getLongValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getLongValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("float")) {
 			// float
-			System.out.println("\n=========================float==========================");
+			printOut("\n=========================float==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getFloatValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getFloatValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("double")) {
 			// double
-			System.out.println("\n=========================double==========================");
+			printOut("\n=========================double==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getDoubleValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getDoubleValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
@@ -104,112 +139,112 @@ public class CompatibleTest {
 
 		if (flagMap.containsKey("boolean")) {
 			// boolean
-			System.out.println("\n=========================boolean==========================");
+			printOut("\n=========================boolean==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getBooleanValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getBooleanValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("String")) {
 			// String
-			System.out.println("\n=========================String==========================");
+			printOut("\n=========================String==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getStringValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getStringValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("bigInteger")) {
 			// bigInteger
-			System.out.println("\n=========================bigInteger==========================");
+			printOut("\n=========================bigInteger==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getBigIntegerValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getBigIntegerValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("BigDecimal")) {
 			// BigDecimal
-			System.out.println("\n=========================BigDecimal==========================");
+			printOut("\n=========================BigDecimal==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getBigDecimalValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getBigDecimalValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("date")) {
 			// date
-			System.out.println("\n=========================date==========================");
+			printOut("\n=========================date==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getDateTimeValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getDateTimeValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("sql.date")) {
 			// sql.date
-			System.out.println("\n=========================sql.date==========================");
+			printOut("\n=========================sql.date==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getDateValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getDateValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("sql.time")) {
 			// sql.time
-			System.out.println("\n=========================sql.time==========================");
+			printOut("\n=========================sql.time==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getTimeValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getTimeValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
 
 		if (flagMap.containsKey("sql.Timestamp")) {
 			// sql.Timestamp
-			System.out.println("\n=========================sql.Timestamp==========================");
+			printOut("\n=========================sql.Timestamp==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
 				try {
-					System.out.println("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getTimestampValue(key) + "]");
+					printOut("OK: KEY[" + key + "]\t V:[" + value1.toString() + "], G[" + xco1.getTimestampValue(key) + "]");
 				} catch (Exception e) {
-					System.err.println("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
+					printErr("ER: KEY[" + key + "]\t V:[" + value1.toString() + "], R:" + e.getMessage());
 				}
 			}
 		}
@@ -218,8 +253,8 @@ public class CompatibleTest {
 
 	@Test
 	public void test12() {
-		//		System.out.println(new Date().toString());
-		System.out.println("\n=========================兼容性==========================");
+		//		printOut(new Date().toString());
+		printOut("\n=========================兼容性==========================");
 		XCO xco = new XCO(true);
 		// byte
 		xco.setByteValue("v1", Byte.MIN_VALUE);
@@ -304,17 +339,17 @@ public class CompatibleTest {
 		xco.setTimestampValue("v52", new java.sql.Timestamp(t));
 
 		String xml = xco.toXMLString();
-		System.out.println(xml);
+		printOut(xml);
 
 		XCO xco1 = XCO.fromXML(xml, true);
-		System.out.println(xco1);
+		printOut(xco1.toString());
 
 		Map<String, Boolean> flagMap = new HashMap<String, Boolean>();
-		//		flagMap.put("byte", true);
-		//		flagMap.put("short", true);
-		//		flagMap.put("int", true);
-		//		flagMap.put("long", true);
-		//		flagMap.put("float", true);
+		flagMap.put("byte", true);
+		flagMap.put("short", true);
+		flagMap.put("int", true);
+		flagMap.put("long", true);
+		flagMap.put("float", true);
 		flagMap.put("double", true);
 		//		flagMap.put("boolean", true);
 		//		flagMap.put("String", true);
@@ -331,5 +366,6 @@ public class CompatibleTest {
 	@Test
 	public void testAll() {
 		test12();
+		//		printColor();
 	}
 }
