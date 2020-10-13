@@ -91,7 +91,8 @@ public class XCO implements Serializable, Cloneable {
 	/**
 	 * 可能存在并发问题
 	 */
-	protected final void putItem(String key, IField fieldValue) {
+	//	protected final void putItem(String key, IField fieldValue) {
+	protected void putItem(String key, IField fieldValue) {
 		if (null == key) {
 			throw new XCOException("Fields are not allowed to be empty");
 		}
