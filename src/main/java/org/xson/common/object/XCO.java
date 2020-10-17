@@ -91,7 +91,6 @@ public class XCO implements Serializable, Cloneable {
 	/**
 	 * 可能存在并发问题
 	 */
-	//	protected final void putItem(String key, IField fieldValue) {
 	protected void putItem(String key, IField fieldValue) {
 		if (null == key) {
 			throw new XCOException("Fields are not allowed to be empty");
@@ -107,7 +106,7 @@ public class XCO implements Serializable, Cloneable {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public XCO setObjectValue(String field, Object value) {
+	public final XCO setObjectValue(String field, Object value) {
 		if (null == value) {
 			remove(field);// 删除
 			return this;
@@ -228,31 +227,42 @@ public class XCO implements Serializable, Cloneable {
 		return this.dateMap.get(field);
 	}
 
-	public final boolean exists(String field) {
+	public boolean exists(String field) {
 		if (this.dateMap.containsKey(field)) {
 			return true;
 		}
 		return false;
 	}
 
-	public final boolean isEmpty() {
+	public boolean isEmpty() {
 		if (this.dateMap.size() == 0) {
 			return true;
 		}
 		return false;
 	}
 
-	public final Set<String> keys() {
+	public Set<String> keys() {
 		return this.dateMap.keySet();
 	}
 
-	public final int size() {
+	public int size() {
 		return this.dateMap.size();
 	}
 
-	public final List<String> keysList() {
+	public List<String> keysList() {
 		return this.fieldList;
 	}
+
+	//	protected final void putItem(String key, IField fieldValue) {
+	//	public final boolean exists(String field) {
+	//	public final boolean isEmpty() {
+	//	public final Set<String> keys() {
+	//		return this.dateMap.keySet();
+	//	}
+	//	public final int size() {
+	//		return this.dateMap.size();
+	//	}
+	//	public final List<String> keysList() {
 
 	////////////////////////////////////SET////////////////////////////////////////
 
