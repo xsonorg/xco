@@ -135,7 +135,7 @@ public class CompatibleTest {
 			}
 		}
 
-		// char TODO
+		// char 
 
 		if (flagMap.containsKey("boolean")) {
 			// boolean
