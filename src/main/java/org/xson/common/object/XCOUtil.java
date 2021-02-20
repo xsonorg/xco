@@ -332,6 +332,27 @@ public class XCOUtil {
 
 	//////////////////////////////////////////////////////////////////////////////////////////
 
+	private static byte toByteExact(short value) {
+		if ((byte) value != value) {
+			throw new ArithmeticException("Out of range");
+		}
+		return (byte) value;
+	}
+
+	private static byte toByteExact(int value) {
+		if ((byte) value != value) {
+			throw new ArithmeticException("Out of range");
+		}
+		return (byte) value;
+	}
+
+	private static byte toByteExact(long value) {
+		if ((byte) value != value) {
+			throw new ArithmeticException("Out of range");
+		}
+		return (byte) value;
+	}
+
 	private static short toShortExact(int value) {
 		if ((short) value != value) {
 			throw new ArithmeticException("Out of range");
@@ -377,6 +398,28 @@ public class XCOUtil {
 			throw new ArithmeticException("Out of range");
 		}
 		return (double) value;
+	}
+
+	/**
+	 * 支持[short, int, long, string, bigint]
+	 */
+	public static byte castToByte(Object src) {
+		Class<?> clazz = src.getClass();
+		if (Byte.class == clazz) {
+			return ((Byte) src).byteValue();
+		}
+		if (Short.class == clazz) {
+			return toByteExact(((Short) src).shortValue());
+		} else if (Integer.class == clazz) {
+			return toByteExact(((Integer) src).intValue());
+		} else if (Long.class == clazz) {
+			return toByteExact(((Long) src).longValue());
+		} else if (String.class == clazz) {
+			return Byte.parseByte((String) src);
+		} else if (BigInteger.class == clazz) {
+			return Byte.parseByte(((BigInteger) src).toString());
+		}
+		throw new NumberFormatException("unsupported types '" + clazz + "' to byte");
 	}
 
 	/**

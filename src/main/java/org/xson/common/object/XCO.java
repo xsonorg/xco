@@ -537,6 +537,14 @@ public class XCO implements Serializable, Cloneable {
 		if (null == fieldValue) {
 			throw new XCOException("The field does not exist: " + field);
 		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToByte(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, byte.class, e);
+			}
+		}
 		Object value = fieldValue.getValue(DataType.BYTE_TYPE);
 		return ((Byte) value).byteValue();
 	}
@@ -558,6 +566,14 @@ public class XCO implements Serializable, Cloneable {
 		IField fieldValue = getField(field);
 		if (null == fieldValue) {
 			return defaultValue;
+		}
+		if (compatible) {
+			Object value = fieldValue.getValue();
+			try {
+				return XCOUtil.castToByte(value);
+			} catch (Throwable e) {
+				throwCastException(field, value, Byte.class, e);
+			}
 		}
 		Object value = fieldValue.getValue(DataType.BYTE_TYPE);
 		return (Byte) value;
