@@ -67,7 +67,7 @@ public class CompatibleTest {
 
 		if (flagMap.containsKey("short")) {
 			// short
-			printOut("\n=========================byte==========================");
+			printOut("\n=========================short==========================");
 			for (int i = 1; i < max; i++) {
 				String key    = "v" + i;
 				Object value1 = xco1.get(key);
